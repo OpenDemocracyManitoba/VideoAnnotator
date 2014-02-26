@@ -46,12 +46,17 @@ d.getElementById("recordStart").addEventListener("click", recordStart, false);
 d.getElementById("recordEnd").addEventListener("click", recordEnd, false);
 d.getElementById("save").addEventListener("click", saveRow, false);
 d.getElementById("deleteRow").addEventListener("click", deleteRow, false);
-d.getElementById("copyToClipboard").addEventListener("click", copyToClipboard, false);
+d.getElementById("persistToTextArea").addEventListener("click", persistToTextArea, false);
 d.getElementById("loadVideo").addEventListener("click", loadVideo, false);
 d.getElementById("reverseMore").addEventListener("click", reverseMore, false);
 d.getElementById("reverse").addEventListener("click", reverse, false);
 d.getElementById("forward").addEventListener("click", forward, false);
 d.getElementById("forwardMore").addEventListener("click", forwardMore, false);
+d.getElementById("persisted_csv").addEventListener("click", function() {
+    // This ensures that when someone clicks on the persisted CSV the textarea selects-all.
+    this.focus();
+    this.select();
+}, false);
 councillorStart.addEventListener("blur", calculateClipLength, false);
 councillorEnd.addEventListener("blur", calculateClipLength, false);
 
@@ -181,15 +186,15 @@ function deleteRow(){
 
 
 //***********************************************************************************
-//copies save history to clipboard for pasting into excel, import to db, etc.
-function copyToClipboard() {
+//copies save history to a textarea to allow for copy/pasting.
+function persistToTextArea() {
     var csvData = "";
     for(var i = 0; i < saveHistory.length; i++) {
         //newlines don't seem to work. they show up in the console, but not when pasted into a text editor
         csvData += saveHistory.options[i].text + "\n";
     }
-    console.log(csvData);
-    window.prompt("Copy to clipboard: Ctrl+C, Enter", csvData);
+    var persist_textarea = document.getElementById("persisted_csv");
+    persist_textarea.innerHTML = csvData;
 }
 
 

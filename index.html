@@ -88,11 +88,17 @@
         
         <button id="save">Save</button>
         <button id="deleteRow">Delete selected row</button>
-        <button id="copyToClipboard">Persist!</button>
+        
         <br /><br />
         <strong>Save history</strong><br />
         <select id="saveHistory" size="10"></select>
         </p>
+        
+        <p>
+            <strong>Save the captured rows to a CSV file.</strong>
+            <button id="copyToClipboard">Persist!</button>
+        </p>
+        <textarea id="persisted_csv" wrap="off"></textarea>
         
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>

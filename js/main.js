@@ -52,7 +52,7 @@ d.getElementById("reverseMore").addEventListener("click", reverseMore, false);
 d.getElementById("reverse").addEventListener("click", reverse, false);
 d.getElementById("forward").addEventListener("click", forward, false);
 d.getElementById("forwardMore").addEventListener("click", forwardMore, false);
-d.getElementById("persisted_csv").addEventListener("click", function() {
+d.getElementById("persistedCSV").addEventListener("click", function() {
     // This ensures that when someone clicks on the persisted CSV the textarea selects-all.
     this.focus();
     this.select();
@@ -193,7 +193,7 @@ function persistToTextArea() {
         //newlines don't seem to work. they show up in the console, but not when pasted into a text editor
         csvData += saveHistory.options[i].text + "\n";
     }
-    var persist_textarea = document.getElementById("persisted_csv");
+    var persist_textarea = document.getElementById("persistedCSV");
     persist_textarea.innerHTML = csvData;
 }
 
@@ -337,9 +337,3 @@ function slowDown() {
 }
 
 
-//jQuery***********************************************************************************
-$(document).ready(function() {
-    
-
-
-});

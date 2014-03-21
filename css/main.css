@@ -112,17 +112,11 @@ textarea {
         float:left;
         width:50%;
     }
-
-
-
-
-
-
-
-
-
-
-
+    
+    select#hansardSelect {
+        width:512px;
+        overflow:auto;
+    }
 
 
 

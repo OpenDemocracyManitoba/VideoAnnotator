@@ -6,15 +6,20 @@ tag.src = "https://www.youtube.com/iframe_api";
 var playerDiv = document.getElementById('player');
 playerDiv.appendChild(tag);
 
+//City of Winnipeg YouTube account: https://www.youtube.com/user/thecityofwinnipeg
+//Council Videos playlist: https://www.youtube.com/playlist?list=PLbfdx_X_36N0P-A_PalMevzQVr_gAshwA
+
 //Constants
-var videoNames = ["2014-01-29 ","2013-12-17 ", "2013-12-11", "2013-11-20",  "2013-11-06", "2013-10-23", "2013-10-22", "2013-09-25", "2013-07-17", "2013-06-26", "2013-05-29", "2013-04-24", "2013-03-20", "2013-02-27", "2013-01-30", "2013-01-29"];
-var videoIds = ["ZbHzXWE1hYs", "EvTTS1dR-xM", "d-UFuzJYIOE", "Gb7-bJbn8vM", "OHVBApCdZAM","e1D_CWBa1yI","zqG4yMqNYrc","HdHBab-HO3M","nIb47yirpbg","anWZeM4UstA","gd8Ws6wNzk4","37aqoCCYqFY","4XolNOj_E90","gg3ZsbJ-Y68","6G4eDzavccc","XMlO21fNdZ0"];
+//note: videoNames are also JSON (hansard data) file names.
+var videoNames = ["2014-01-29","2013-12-17", "2013-12-11", "2013-11-20",  "2013-11-06", "2013-10-23", "2013-10-22", "2013-09-25", "2013-07-17", "2013-06-26", "2013-05-29", "2013-04-24", "2013-03-20", "2013-02-27", "2013-01-30", "2013-01-29"];
+var videoIds =  ["ZbHzXWE1hYs", "EvTTS1dR-xM", "d-UFuzJYIOE", "Gb7-bJbn8vM", "OHVBApCdZAM","e1D_CWBa1yI","zqG4yMqNYrc","HdHBab-HO3M","nIb47yirpbg","anWZeM4UstA","gd8Ws6wNzk4","37aqoCCYqFY","4XolNOj_E90","gg3ZsbJ-Y68","6G4eDzavccc","XMlO21fNdZ0"];
 var currentVidId;
 var currentVidName;
 var councillors = ["Browaty","Eadie","Fielding","Gerbasi","Havixbeck","Mayes","Nordman","Orlikow","Pagtakhan","Sharma","Smith","Steen","Swandel","Vandal","Wyatt"];
 
 //DOM stuff
 var d = document;
+var head = document.getElementsByTagName("head")[0];
 var videosSelect = d.getElementById("videos");
 var currentTime = d.getElementById("currentTime");
 var videoState = d.getElementById("videoState");
@@ -29,29 +34,33 @@ var councillorStart = d.getElementById("councillorStart");
 var councillorEnd = d.getElementById("councillorEnd");
 var notes = d.getElementById("notes");
 var clipLength = d.getElementById("clipLength");
+var hansardSelect = d.getElementById("hansardSelect");
 //saving
 var saveHistory = d.getElementById("saveHistory");
 
 
 //set event listeners of buttons
-d.getElementById("play").addEventListener("click", play, false);
-d.getElementById("pause").addEventListener("click", pause, false);
-d.getElementById("stop").addEventListener("click", stop, false);
-d.getElementById("restart").addEventListener("click", restart, false);
-d.getElementById("mute").addEventListener("click", mute, false);
-d.getElementById("unmute").addEventListener("click", unmute, false);
-d.getElementById("speedUp").addEventListener("click", speedUp, false);
-d.getElementById("slowDown").addEventListener("click", slowDown, false);
+//d.getElementById("play").addEventListener("click", play, false);
+//d.getElementById("pause").addEventListener("click", pause, false);
+//d.getElementById("stop").addEventListener("click", stop, false);
+//d.getElementById("restart").addEventListener("click", restart, false);
+//d.getElementById("mute").addEventListener("click", mute, false);
+//d.getElementById("unmute").addEventListener("click", unmute, false);
+//d.getElementById("speedUp").addEventListener("click", speedUp, false);
+//d.getElementById("slowDown").addEventListener("click", slowDown, false);
 d.getElementById("recordStart").addEventListener("click", recordStart, false);
 d.getElementById("recordEnd").addEventListener("click", recordEnd, false);
 d.getElementById("save").addEventListener("click", saveRow, false);
 d.getElementById("deleteRow").addEventListener("click", deleteRow, false);
 d.getElementById("persistToTextArea").addEventListener("click", persistToTextArea, false);
 d.getElementById("loadVideo").addEventListener("click", loadVideo, false);
+d.getElementById("loadHansard").addEventListener("click", loadHansard, false);
+d.getElementById("reverseEvenMore").addEventListener("click", reverseEvenMore, false);
 d.getElementById("reverseMore").addEventListener("click", reverseMore, false);
 d.getElementById("reverse").addEventListener("click", reverse, false);
 d.getElementById("forward").addEventListener("click", forward, false);
 d.getElementById("forwardMore").addEventListener("click", forwardMore, false);
+d.getElementById("forwardEvenMore").addEventListener("click", forwardEvenMore, false);
 d.getElementById("persistedCSV").addEventListener("click", function() {
     // This ensures that when someone clicks on the persisted CSV the textarea selects-all.
     this.focus();
@@ -165,7 +174,8 @@ function saveRow(){
     var option = d.createElement("option");
     var startTimeForUrl = Math.floor(councillorStart.value); //with no fractional part
     var videoUrlWithStartTime = "www.youtube.com/watch?v=" + currentVidId + "&t=" + startTimeForUrl;
-    var text = d.createTextNode("\"" + currentVidId +"\",\"" + currentVidName + "\",\"" + councillor.value + "\"," + councillorStart.value + "," + councillorEnd.value + "," + clipLength.value + ",\"" + videoUrlWithStartTime + "\",\"" + notes.value + "\"");
+    var selectedHansardData = hansardSelect.options[hansardSelect.selectedIndex].text;
+    var text = d.createTextNode("\"" + currentVidId +"\",\"" + currentVidName + "\",\"" + councillor.value + "\"," + councillorStart.value + "," + councillorEnd.value + "," + clipLength.value + ",\"" + videoUrlWithStartTime + "\",\"" + notes.value + "\",\"" + selectedHansardData + "\"");
     option.appendChild(text);
     saveHistory.appendChild(option);
 }
@@ -182,31 +192,16 @@ function deleteRow(){
 }
 
 
-
-
-
 //***********************************************************************************
 //copies save history to a textarea to allow for copy/pasting.
 function persistToTextArea() {
     var csvData = "";
     for(var i = 0; i < saveHistory.length; i++) {
-        //newlines don't seem to work. they show up in the console, but not when pasted into a text editor
         csvData += saveHistory.options[i].text + "\n";
     }
     var persist_textarea = document.getElementById("persistedCSV");
     persist_textarea.innerHTML = csvData;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 //record start end end times of councillor speaking
@@ -234,43 +229,62 @@ function calculateClipLength() {
 
 
 //******************************* Loading Council videos *********************
-//load selected video
+//load selected video and corresponding hansard data from JSON file
 function loadVideo() {
     //alert(videoIds[videos.selectedIndex]);
     currentVidId = videoIds[videos.selectedIndex];
     currentVidName = videoNames[videos.selectedIndex];
+    hansardJsonFileName = "json/" + currentVidName + ".js";
 
+    //destroy existing player
     if (!typeof player === 'undefined') {
         player.destroy();
     }   
     
+    //create new player and attach event handlers
     player = new YT.Player('player', {
-    height: '390',
-    width: '640',
-    //height:195,
-    //width:320,
-    //videoId: 'tmCKnVaU7H0',
-    videoId: currentVidId,
-    events: {
-      'onReady': onPlayerReady,
-      'onStateChange': onPlayerStateChange
+        height: 312,
+        width: 512, 
+        videoId: currentVidId,
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+         }
+    });
+    
+    //create script element in document head -- then user has to click the load hansard button
+    //because it takes milliseconds to create the hansard variable in the hansard data js file.
+    var scriptEle = d.createElement("script");
+    scriptEle.setAttribute("type", "text/javascript");
+    scriptEle.setAttribute("src", hansardJsonFileName);
+    head.appendChild(scriptEle);
+}
+
+function loadHansard() {
+    //load hansard JSON file data into multi-line select
+    var h = hansard.hansard;
+    for(var i=0; i<h.length; i++) {
+        //types: speaker, motion, section, vote
+        if(h[i].type == "speaker" || h[i].type == "motion") {
+            
+            var option = d.createElement("option");
+            var text;
+            if(h[i].type == "speaker") {
+                text = d.createTextNode(h[i].name + "‡" + h[i].spoken);
+            } else { //motion
+                text = d.createTextNode(h[i].name + "‡" + h[i].motion_text + "‡" + h[i].moved_by + "‡" + h[i].seconded_by);
+            }
+            option.appendChild(text);
+            hansardSelect.appendChild(option);
+        }
     }
-  });
 }
 
 
-
-
-
-
-
-
-
-
-
-
 //*******************************Basic video functions ************************
-
+function reverseEvenMore() {
+    player.seekTo(player.getCurrentTime() - 30, true);
+}
 function reverseMore() {
     player.seekTo(player.getCurrentTime() - 10, true);
 }
@@ -283,10 +297,15 @@ function forward() {
 function forwardMore() {
     player.seekTo(player.getCurrentTime() + 10, true);
 }
+function forwardEvenMore() {
+    player.seekTo(player.getCurrentTime() + 30, true);
+}
+
 
 function showCurrentTime() {
     currentTime.value = player.getCurrentTime();
 }
+/*
 
 function play() {
     tryingTo.innerHTML = "Play";
@@ -335,5 +354,6 @@ function slowDown() {
     speed.value = player.getPlaybackRate();
     
 }
+*/
 
 

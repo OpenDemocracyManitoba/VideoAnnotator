@@ -15,7 +15,7 @@ var videoNames = ["2014-01-29","2013-12-17", "2013-12-11", "2013-11-20",  "2013-
 var videoIds =  ["ZbHzXWE1hYs", "EvTTS1dR-xM", "d-UFuzJYIOE", "Gb7-bJbn8vM", "OHVBApCdZAM","e1D_CWBa1yI","zqG4yMqNYrc","HdHBab-HO3M","nIb47yirpbg","anWZeM4UstA","gd8Ws6wNzk4","37aqoCCYqFY","4XolNOj_E90","gg3ZsbJ-Y68","6G4eDzavccc","XMlO21fNdZ0"];
 var currentVidId;
 var currentVidName;
-var councillors = ["Browaty","Eadie","Fielding","Gerbasi","Havixbeck","Mayes","Nordman","Orlikow","Pagtakhan","Sharma","Smith","Steen","Swandel","Vandal","Wyatt"];
+var councillors = ["CLERK", "Browaty","Eadie","Fielding","Gerbasi","Havixbeck", "Katz", "Mayes","Nordman","Orlikow","Pagtakhan","Sharma","Smith","Steen","Swandel","Vandal","Wyatt"];
 
 //DOM stuff
 var d = document;
@@ -26,6 +26,7 @@ var videoState = d.getElementById("videoState");
 var speed = d.getElementById("speed");
 var videoUrl = d.getElementById("videoUrl");
 var councillorsSelect = d.getElementById("councillors");
+var speakingTypesSelect = d.getElementById("speakingTypes");
 //councillor start and end
 var videoId = d.getElementById("videoId");
 var videoTitle = d.getElementById("videoTitle");
@@ -40,8 +41,8 @@ var saveHistory = d.getElementById("saveHistory");
 
 
 //set event listeners of buttons
-//d.getElementById("play").addEventListener("click", play, false);
-//d.getElementById("pause").addEventListener("click", pause, false);
+d.getElementById("play").addEventListener("click", play, false);
+d.getElementById("pause").addEventListener("click", pause, false);
 //d.getElementById("stop").addEventListener("click", stop, false);
 //d.getElementById("restart").addEventListener("click", restart, false);
 //d.getElementById("mute").addEventListener("click", mute, false);
@@ -156,7 +157,7 @@ function onPlayerStateChange(event) {
             state = "Cued";
             break;
     }
-    videoState.innerHTML = state;
+    //videoState.innerHTML = state;
     
   //stop after 6 seconds.
   /*if (event.data == YT.PlayerState.PLAYING && !done) {
@@ -175,7 +176,8 @@ function saveRow(){
     var startTimeForUrl = Math.floor(councillorStart.value); //with no fractional part
     var videoUrlWithStartTime = "www.youtube.com/watch?v=" + currentVidId + "&t=" + startTimeForUrl;
     var selectedHansardData = hansardSelect.options[hansardSelect.selectedIndex].text;
-    var text = d.createTextNode("\"" + currentVidId +"\",\"" + currentVidName + "\",\"" + councillor.value + "\"," + councillorStart.value + "," + councillorEnd.value + "," + clipLength.value + ",\"" + videoUrlWithStartTime + "\",\"" + notes.value + "\",\"" + selectedHansardData + "\"");
+    var speakingType = speakingTypesSelect.options[speakingTypesSelect.selectedIndex].text;
+    var text = d.createTextNode("\"" + currentVidId +"\",\"" + currentVidName + "\",\"" + councillor.value + "\"," + councillorStart.value + "," + councillorEnd.value + "," + clipLength.value + ",\"" + videoUrlWithStartTime + "\",\"" + notes.value + "\",\"" + speakingType + "\"," + selectedHansardData);
     option.appendChild(text);
     saveHistory.appendChild(option);
 }
@@ -195,6 +197,8 @@ function deleteRow(){
 //***********************************************************************************
 //copies save history to a textarea to allow for copy/pasting.
 function persistToTextArea() {
+    //create column headers row
+    
     var csvData = "";
     for(var i = 0; i < saveHistory.length; i++) {
         csvData += saveHistory.options[i].text + "\n";
@@ -270,9 +274,9 @@ function loadHansard() {
             var option = d.createElement("option");
             var text;
             if(h[i].type == "speaker") {
-                text = d.createTextNode(h[i].name + "‡" + h[i].spoken);
+                text = d.createTextNode("\"" + h[i].name + "\",\"" + h[i].spoken + "\"");
             } else { //motion
-                text = d.createTextNode(h[i].name + "‡" + h[i].motion_text + "‡" + h[i].moved_by + "‡" + h[i].seconded_by);
+                 text = d.createTextNode("\"" + h[i].name + "\",\"" + h[i].motion_text + "\",\"" + h[i].moved_by + "\",\"" + h[i].seconded_by + "\"");
             }
             option.appendChild(text);
             hansardSelect.appendChild(option);
@@ -305,20 +309,21 @@ function forwardEvenMore() {
 function showCurrentTime() {
     currentTime.value = player.getCurrentTime();
 }
-/*
+
 
 function play() {
-    tryingTo.innerHTML = "Play";
+    //tryingTo.innerHTML = "Play";
     player.playVideo();
     showCurrentTime();
 }
 
 function pause() {
-    tryingTo.innerHTML = "Pause";
+    //tryingTo.innerHTML = "Pause";
     player.pauseVideo();
     showCurrentTime();
 }
 
+/*
 function stop() {
     tryingTo.innerHTML = "Stop";
     player.stopVideo();

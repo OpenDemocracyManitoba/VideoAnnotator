@@ -136,11 +136,15 @@ function saveRow(){
     var option = d.createElement("option");
     var startTimeForUrl = Math.floor(councillorStart.value); //with no fractional part
     var videoUrlWithStartTime = "www.youtube.com/watch?v=" + currentVidId + "&t=" + startTimeForUrl;
-    var selectedHansardData = hansardSelect.options[hansardSelect.selectedIndex].text;
-    var speakingType = speakingTypesSelect.options[speakingTypesSelect.selectedIndex].text;
-    var text = d.createTextNode("\"" + currentVidId +"\",\"" + currentVidName + "\",\"" + councillor.value + "\"," + councillorStart.value + "," + councillorEnd.value + "," + clipLength.value + ",\"" + videoUrlWithStartTime + "\",\"" + notes.value + "\",\"" + speakingType + "\"," + selectedHansardData);
-    option.appendChild(text);
-    saveHistory.appendChild(option);
+    if (hansardSelect.options[hansardSelect.selectedIndex]) {
+        var selectedHansardData = hansardSelect.options[hansardSelect.selectedIndex].text;
+        var speakingType = speakingTypesSelect.options[speakingTypesSelect.selectedIndex].text;
+        var text = d.createTextNode("\"" + currentVidId +"\",\"" + currentVidName + "\",\"" + councillor.value + "\"," + councillorStart.value + "," + councillorEnd.value + "," + clipLength.value + ",\"" + videoUrlWithStartTime + "\",\"" + notes.value + "\",\"" + speakingType + "\"," + selectedHansardData);
+        option.appendChild(text);
+        saveHistory.appendChild(option);
+    } else {
+        alert("You need to select an entry from the Hansard text before you can save.")
+    }
 }
 
 //deletes selected row from multi-line select

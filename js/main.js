@@ -137,9 +137,31 @@ function saveRow(){
     var startTimeForUrl = Math.floor(councillorStart.value); //with no fractional part
     var videoUrlWithStartTime = "www.youtube.com/watch?v=" + currentVidId + "&t=" + startTimeForUrl;
     if (hansardSelect.options[hansardSelect.selectedIndex]) {
-        var selectedHansardData = hansardSelect.options[hansardSelect.selectedIndex].text;
+        var selectedHansardJSON = JSON.parse(hansardSelect.options[hansardSelect.selectedIndex].text);
         var speakingType = speakingTypesSelect.options[speakingTypesSelect.selectedIndex].text;
-        var text = d.createTextNode("\"" + currentVidId +"\",\"" + currentVidName + "\",\"" + councillor.value + "\"," + councillorStart.value + "," + councillorEnd.value + "," + clipLength.value + ",\"" + videoUrlWithStartTime + "\",\"" + notes.value + "\",\"" + speakingType + "\"," + selectedHansardData);
+        
+        // Warning if the handsard row type doesn't match the user selected speaking type.
+        if ((selectedHansardJSON.type == 'speaker' && speakingType != 'Councillor Speaking')
+            || (selectedHansardJSON.type == 'motion' && speakingType != 'Motion Reading')) {
+            if (!confirm("Selected speaking type doesn't match selected hansard row.\nOK to proceed. Cancel to fix.")) {
+                return;
+            }
+        }
+        
+        var json_row = {
+                        'video_id':     currentVidId,
+                        'video_name':   currentVidName,
+                        'councillor':   councillor.value,
+                        'start_time':   councillorStart.value,
+                        'end_time':     councillorEnd.value,
+                        'length':       clipLength.value,
+                        'video_url':    videoUrlWithStartTime,
+                        'notes':        notes.value,
+                        'type':         speakingType,
+                        'hansard':      selectedHansardJSON
+                        };
+        
+        var text = d.createTextNode(JSON.stringify(json_row));
         option.appendChild(text);
         saveHistory.appendChild(option);
     } else {
@@ -235,14 +257,9 @@ function loadHansard() {
     for(var i=0; i<h.length; i++) {
         //types: speaker, motion, section, vote
         if(h[i].type == "speaker" || h[i].type == "motion") {
-            
+            var json_row = h[i];
             var option = d.createElement("option");
-            var text;
-            if(h[i].type == "speaker") {
-                text = d.createTextNode("\"" + h[i].name + "\",\"" + h[i].spoken + "\"");
-            } else { //motion
-                 text = d.createTextNode("\"" + h[i].name + "\",\"" + h[i].motion_text + "\",\"" + h[i].moved_by + "\",\"" + h[i].seconded_by + "\"");
-            }
+            var text = d.createTextNode(JSON.stringify(json_row));
             option.appendChild(text);
             hansardSelect.appendChild(option);
         }

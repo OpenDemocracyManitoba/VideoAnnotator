@@ -36,8 +36,10 @@ var councillorEnd = d.getElementById("councillorEnd");
 var notes = d.getElementById("notes");
 var clipLength = d.getElementById("clipLength");
 var hansardSelect = d.getElementById("hansardSelect");
+var hansardFullText = d.getElementById("hansardFullText");
 //saving
 var saveHistory = d.getElementById("saveHistory");
+var persistTextarea = document.getElementById("persistedJSON");
 
 
 //set event listeners of buttons
@@ -62,13 +64,21 @@ d.getElementById("reverse").addEventListener("click", reverse, false);
 d.getElementById("forward").addEventListener("click", forward, false);
 d.getElementById("forwardMore").addEventListener("click", forwardMore, false);
 d.getElementById("forwardEvenMore").addEventListener("click", forwardEvenMore, false);
-d.getElementById("persistedCSV").addEventListener("click", function() {
+d.getElementById("persistedJSON").addEventListener("click", function() {
     // This ensures that when someone clicks on the persisted CSV the textarea selects-all.
     this.focus();
     this.select();
 }, false);
 councillorStart.addEventListener("blur", calculateClipLength, false);
 councillorEnd.addEventListener("blur", calculateClipLength, false);
+hansardSelect.addEventListener("change", function() {
+    // When hansard data is selected or change, display the data in the
+    // textarea below the hansard select.
+    var selected = hansardSelect.options[hansardSelect.selectedIndex];
+    if (selected) {
+       hansardFullText.value = selected.text;
+    }
+}, false);
 
 
 
@@ -188,12 +198,11 @@ function deleteRow(){
 function persistToTextArea() {
     //create column headers row
     
-    var csvData = "";
+    var jsonData = [];
     for(var i = 0; i < saveHistory.length; i++) {
-        csvData += saveHistory.options[i].text + "\n";
+        jsonData.push(JSON.parse(saveHistory.options[i].text));
     }
-    var persist_textarea = document.getElementById("persistedCSV");
-    persist_textarea.innerHTML = csvData;
+    persistTextarea.value = JSON.stringify(jsonData);
 }
 
 

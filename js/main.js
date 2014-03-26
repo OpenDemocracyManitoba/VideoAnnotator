@@ -137,6 +137,7 @@ function saveRow(){
     var startTimeForUrl = Math.floor(councillorStart.value); //with no fractional part
     var videoUrlWithStartTime = "www.youtube.com/watch?v=" + currentVidId + "&t=" + startTimeForUrl;
     if (hansardSelect.options[hansardSelect.selectedIndex]) {
+        // Parsing out the selected hansard data into a js object using JSON.parse.
         var selectedHansardJSON = JSON.parse(hansardSelect.options[hansardSelect.selectedIndex].text);
         var speakingType = speakingTypesSelect.options[speakingTypesSelect.selectedIndex].text;
         
@@ -161,6 +162,7 @@ function saveRow(){
                         'hansard':      selectedHansardJSON
                         };
         
+        // Stringifying the data we have just created into JSON and adding to the saveHistory select.
         var text = d.createTextNode(JSON.stringify(json_row));
         option.appendChild(text);
         saveHistory.appendChild(option);
@@ -259,6 +261,7 @@ function loadHansard() {
         if(h[i].type == "speaker" || h[i].type == "motion") {
             var json_row = h[i];
             var option = d.createElement("option");
+            // Stringify our data into JSON to store in the hansardSelect.
             var text = d.createTextNode(JSON.stringify(json_row));
             option.appendChild(text);
             hansardSelect.appendChild(option);

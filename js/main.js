@@ -80,7 +80,7 @@ function onYouTubeIframeAPIReady() {
     //should load City of Winnipeg playlist
     //"http://www.youtube.com/channel/UClbGHHM4vS_wK9tVdOld8pQ"
     //and allow selection of the different videos
-        //populate videos
+    //populate videos
     for(var i = 0; i < videoIds.length; i++) {
         var o = document.createElement('option');
         o.innerHTML = videoNames[i];
@@ -95,44 +95,12 @@ function onYouTubeIframeAPIReady() {
         o.value = councillors[i];
         councillorsSelect.appendChild(o);
     }
-    
-    
-  /*player = new YT.Player('player', {
-    height: '390',
-    width: '640',
-    //height:195,
-    //width:320,
-    videoId: 'tmCKnVaU7H0',
-    //videoId: vidId,
-    events: {
-      'onReady': onPlayerReady,
-      'onStateChange': onPlayerStateChange
-    }
-  });*/
 }
 
 
 //The API will call this function when the video player is ready.
 function onPlayerReady(event) {
-    
-    //for using local HTML storage
-    if(typeof(Storage)!=="undefined")
-    {
-        //storage gtg
-    }
-    else
-    {
-        alert("Your browser doesn't support local storage, so this ain't gonna work.");
-    }
-    
-    //event.target.playVideo();
-  
     videoUrl.value = player.getVideoUrl();
-  
-
-  //debug
-  //console.dir(player);
-  //console.dir (event.target);
 }
 
 //The API calls this function when the player's state changes.
@@ -157,13 +125,6 @@ function onPlayerStateChange(event) {
             state = "Cued";
             break;
     }
-    //videoState.innerHTML = state;
-    
-  //stop after 6 seconds.
-  /*if (event.data == YT.PlayerState.PLAYING && !done) {
-    setTimeout(stop, 6000);
-    done = true;
-  }*/
 }
 
 
@@ -304,61 +265,14 @@ function forwardMore() {
 function forwardEvenMore() {
     player.seekTo(player.getCurrentTime() + 30, true);
 }
-
-
 function showCurrentTime() {
     currentTime.value = player.getCurrentTime();
 }
-
-
 function play() {
-    //tryingTo.innerHTML = "Play";
     player.playVideo();
     showCurrentTime();
 }
-
 function pause() {
-    //tryingTo.innerHTML = "Pause";
     player.pauseVideo();
     showCurrentTime();
 }
-
-/*
-function stop() {
-    tryingTo.innerHTML = "Stop";
-    player.stopVideo();
-    showCurrentTime();
-}
-
-function restart() {
-    tryingTo.innerHTML = "Restart";
-    player.seekTo(0, true);
-    player.playVideo();
-    showCurrentTime();
-}
-
-function mute() {
-    tryingTo.innerHTML = "Mute";
-    player.mute();
-}
-
-function unmute() {
-    tryingTo.innerHTML = "Unmute";
-    player.unMute();
-}
-
-function speedUp() {
-    tryingTo.innerHTML = "Speed up";
-    player.setPlaybackRate(player.getPlaybackRate() + 0.5);
-    speed.value = player.getPlaybackRate();
-}
-
-function slowDown() {
-    tryingTo.innerHTML = "Slow down";
-    player.setPlaybackRate(player.getPlaybackRate() - 0.5);
-    speed.value = player.getPlaybackRate();
-    
-}
-*/
-
-

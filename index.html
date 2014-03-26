@@ -9,7 +9,6 @@
         <title>Video Annotator</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
@@ -17,7 +16,6 @@
     <body>
         <!-- wrapper div for two-column layout -->
         <div id="wrapper">
-                
             <div id="column1">       
                 <!--[if lt IE 7]>
                     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -29,7 +27,6 @@
                 <p><strong>Select corresponding hansard data:</strong></p>
                 <select id="hansardSelect" size="10"></select>
             </div> <!-- column1 -->
-            
             <div id="column2">
                 <p>
                     Council videos: <select id="videos"></select>
@@ -37,7 +34,7 @@
                     <button id="loadHansard">Load Hansard Data</button>
                 </p>
                 <p>
-                <strong>Current Time: </strong><input id="currentTime" type="text" />
+                    <strong>Current Time: </strong><input id="currentTime" type="text" />
                 </p>
                 
                 <button id="play">Play</button>
@@ -65,25 +62,22 @@
                     <option>Other</option>
                 </select>
                 <p>         
-                Video ID: <input type="text" id="videoId" />
-                Video Title: <input type="text" id="videoTitle" />
-                <br />
-                Councillor: <input type="text" id="councillor" /><br />
-                Start: <input type="text" id="councillorStart" />
-                End: <input type="text" id="councillorEnd" /><br />
-                Length: <input type="text" id="clipLength" />
-                <br />
-                Notes: <textarea id="notes" rows="3" cols="40"></textarea>
-                <br />
-                
-                <button id="save">Save</button>
-                <button id="deleteRow">Delete selected row</button>
-                
-                <br /><br />
-                <strong>Save history</strong><br />
-                <select id="saveHistory" size="10"></select>
+                    Video ID: <input type="text" id="videoId" />
+                    Video Title: <input type="text" id="videoTitle" />
+                    <br />
+                    Councillor: <input type="text" id="councillor" /><br />
+                    Start: <input type="text" id="councillorStart" />
+                    End: <input type="text" id="councillorEnd" /><br />
+                    Length: <input type="text" id="clipLength" />
+                    <br />
+                    Notes: <textarea id="notes" rows="3" cols="40"></textarea>
+                    <br />
+                    <button id="save">Save</button>
+                    <button id="deleteRow">Delete selected row</button>
+                    <br /><br />
+                    <strong>Save history</strong><br />
+                    <select id="saveHistory" size="10"></select>
                 </p>
-                
                 <p>
                     <strong>Save the captured rows to a JSON file.</strong>
                     <br />Click the button...
@@ -92,11 +86,9 @@
                 </p>
                 <textarea id="persistedCSV" wrap="off"></textarea>
                 
-                <script src="js/plugins.js"></script>
-                <script src="js/main.js"></script>
-        
-    
             </div> <!-- column2 -->
         </div> <!-- wrapper -->
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
     </body>
 </html>

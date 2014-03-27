@@ -15,7 +15,7 @@ var videoNames = ["2014-01-29","2013-12-17", "2013-12-11", "2013-11-20",  "2013-
 var videoIds =  ["ZbHzXWE1hYs", "EvTTS1dR-xM", "d-UFuzJYIOE", "Gb7-bJbn8vM", "OHVBApCdZAM","e1D_CWBa1yI","zqG4yMqNYrc","HdHBab-HO3M","nIb47yirpbg","anWZeM4UstA","gd8Ws6wNzk4","37aqoCCYqFY","4XolNOj_E90","gg3ZsbJ-Y68","6G4eDzavccc","XMlO21fNdZ0"];
 var currentVidId;
 var currentVidName;
-var councillors = ["CLERK", "Browaty","Eadie","Fielding","Gerbasi","Havixbeck", "Katz", "Mayes","Nordman","Orlikow","Pagtakhan","Sharma","Smith","Steen","Swandel","Vandal","Wyatt"];
+var councillors = ["Clerk", "Browaty","Eadie","Fielding","Gerbasi","Havixbeck", "Katz", "Mayes","Nordman","Orlikow","Pagtakhan","Sharma","Smith","Steen","Swandel","Vandal","Wyatt"];
 
 //DOM stuff
 var d = document;

@@ -22,26 +22,28 @@
                 <![endif]-->      
                 <!-- YouTube player is created in iframe here - see main.js -->
                 <div id="player"></div>
-                <br />
                 <!-- select hansard text -->
-                <p><strong>Select corresponding hansard data:</strong></p>
+                <h4>Select Corresponding Hansard Data</h4>
                 <select id="hansardSelect" size="10"></select>
-                <p>Full text of selected hansard data:</p>
+                <h4>Full Text of Selected Hansard Data</h4>
                 <textarea id="hansardFullText"></textarea>
             </div> <!-- column1 -->
             <div id="column2">
+                <h4>Load Video and Corresponding Hansard to Begin</h4>
                 <p>
                     Council videos: <select id="videos"></select>
                     <button id="loadVideo">Load Video</button>
                     <button id="loadHansard">Load Hansard Data</button>
+                    <!-- Various hidden inputs here: -->
                     <input id="currentTime" type="hidden" />
                     <input type="hidden" id="videoUrl" />
+                    <input type="hidden" id="videoId" />
+                    <input type="hidden" id="videoTitle" />
+                    <input type="hidden" id="councillor" />
                 </p>
                 <p>
                     <button id="play">Play</button>
                     <button id="pause">Pause</button>
-                </p>
-                <p>
                     <button id="reverseEvenMore">-30s</button>
                     <button id="reverseMore">-10s</button>
                     <button id="reverse">-5s</button>
@@ -50,38 +52,46 @@
                     <button id="forwardEvenMore">+30s</button>
                 </p>
                 
-                <h3>Councillor Start and End Time Recording</h3>
-                <select id="councillors"></select>
-                <button id="recordStart">Record Start Time</button>
-                <button id="recordEnd">Record End Time</button><br />
-                Speaking Type:
-                <select id="speakingTypes">
-                    <option>Councillor Speaking</option>
-                    <option>Motion Reading</option>
-                    <option>Announcement</option>
-                    <option>Other</option>
-                </select>
+                <h4>Councillor Start and End Time Recording</h4>
+                <p>
+                    <select id="councillors"></select>
+                    <button id="recordStart">Record Start Time</button>
+                    <button id="recordEnd">Record End Time</button><br />
+                </p>
+                <p>
+                    Speaking Type:
+                    <select id="speakingTypes">
+                        <option>Councillor Speaking</option>
+                        <option>Motion Reading</option>
+                        <option>Announcement</option>
+                        <option>Other</option>
+                    </select>
+                </p>
                 <p>         
-                    <input type="hidden" id="videoId" />
-                    <input type="hidden" id="videoTitle" />
-                    <input type="hidden" id="councillor" /><br />
                     Start: <input type="text" id="councillorStart" />
-                    End: <input type="text" id="councillorEnd" /><br />
+                    End: <input type="text" id="councillorEnd" />
                     Length: <input type="text" id="clipLength" />
-                    <br />
+                </p>
+                <p>         
                     Notes: <textarea id="notes" rows="3" cols="40"></textarea>
-                    <br />
+                </p>
+                <p>         
                     <button id="save">Save</button>
-                    <button id="deleteRow">Delete selected row</button>
-                    <br /><br />
-                    <strong>Save history</strong><br />
+                </p>
+                <h4>Save History</h4>
+                <p>
                     <select id="saveHistory" size="10"></select>
                 </p>
                 <p>
-                    <strong>Save the captured rows to a JSON file.</strong>
-                    <br />Click the button...
+                    <button id="deleteRow">Delete selected row</button>
+                </p>
+                <h4>Saving History to a JSON File</h4>
+                <p>
+                    Click this button:
                     <button id="persistToTextArea">Persist!</button>
-                    <br />Then just click in the text area and press CTRL-C and paste into a text file!
+                </p>
+                <p>
+                    Then just click in the text area and press CTRL-C and paste into a text file!
                 </p>
                 <textarea id="persistedJSON" wrap="off"></textarea>
                 

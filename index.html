@@ -34,15 +34,13 @@
                     Council videos: <select id="videos"></select>
                     <button id="loadVideo">Load Video</button>
                     <button id="loadHansard">Load Hansard Data</button>
+                    <input id="currentTime" type="hidden" />
+                    <input type="hidden" id="videoUrl" />
                 </p>
                 <p>
-                    <strong>Current Time: </strong><input id="currentTime" type="text" />
+                    <button id="play">Play</button>
+                    <button id="pause">Pause</button>
                 </p>
-                
-                <button id="play">Play</button>
-                <button id="pause">Pause</button>
-                
-                <p>Video URL: <input type="text" id="videoUrl" /></p>
                 <p>
                     <button id="reverseEvenMore">-30s</button>
                     <button id="reverseMore">-10s</button>
@@ -64,10 +62,9 @@
                     <option>Other</option>
                 </select>
                 <p>         
-                    Video ID: <input type="text" id="videoId" />
-                    Video Title: <input type="text" id="videoTitle" />
-                    <br />
-                    Councillor: <input type="text" id="councillor" /><br />
+                    <input type="hidden" id="videoId" />
+                    <input type="hidden" id="videoTitle" />
+                    <input type="hidden" id="councillor" /><br />
                     Start: <input type="text" id="councillorStart" />
                     End: <input type="text" id="councillorEnd" /><br />
                     Length: <input type="text" id="clipLength" />

@@ -6,12 +6,9 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
+        <title>Video Annotator</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
@@ -19,113 +16,88 @@
     <body>
         <!-- wrapper div for two-column layout -->
         <div id="wrapper">
-            
-        <div id="column1">       
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->      
-        <!-- YouTube player is created in iframe here - see main.js -->
-        <div id="player"></div>
-                <br />
-        <!-- select hansard text -->
-        <p><strong>Select corresponding hansard data:</strong></p>
-        <select id="hansardSelect" size="10"></select>
-        
-        </div> <!-- column1 -->
-
-        
-        <!--<p><iframe id="video" class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/Gb7-bJbn8vM?version=3&enablejsapi=1" frameborder="0"><br/>
-        </iframe></p>-->
-        
-        <div id="column2">
-        <p>
-            Council videos: <select id="videos"></select>
-            <button id="loadVideo">Load Video</button>
-            <button id="loadHansard">Load Hansard Data</button>
-        </p>
-        <p>
-        <strong>Current Time: </strong><input id="currentTime" type="text" />
-        </p>
-        <!-- <p>Trying to: <span id="tryingTo">Pending...</span> |
-        Video state: <span id="videoState">Pending...</span></p>
-        
-        <p>
-            <a href="javascript:void(0);" onclick="play()">Play</a>
-            <a href="javascript:void(0);" onclick="pause()">Pause</a>
-            <a href="javascript:void(0);" onclick="stop()">Stop</a>
-        </p>
-        
-        <p> -->
-        
-        <button id="play">Play</button>
-        <button id="pause">Pause</button>
-        
-        <!--
-        <button id="stop">Stop</button>
-        <button id="restart">Restart</button>
-        
-        </br />
-        <button id="mute">Mute</button>
-        <button id="unmute">Unmute</button>
-        <br />
-        <button id="speedUp">Speed Up</button>
-        <button id="slowDown">Slow Down</button>
-        <input type="text" id="speed" />
-        </p> -->
-        <p>Video URL: <input type="text" id="videoUrl" /></p>
-        <p>
-            <button id="reverseEvenMore">-30s</button>
-            <button id="reverseMore">-10s</button>
-            <button id="reverse">-5s</button>
-            <button id="forward">+5s</button>
-            <button id="forwardMore">+10s</button>
-            <button id="forwardEvenMore">+30s</button>
-        </p>
-        
-        <h3>Councillor Start and End Time Recording</h3>
-        <select id="councillors"></select>
-        <button id="recordStart">Record Start Time</button>
-        <button id="recordEnd">Record End Time</button><br />
-        Speaking Type:
-        <select id="speakingTypes">
-            <option>Councillor Speaking</option>
-            <option>Motion Reading</option>
-            <option>Announcement</option>
-            <option>Other</option>
-        </select>
-        <p>         
-        Video ID: <input type="text" id="videoId" />
-        Video Title: <input type="text" id="videoTitle" />
-        <br />
-        Councillor: <input type="text" id="councillor" /><br />
-        Start: <input type="text" id="councillorStart" />
-        End: <input type="text" id="councillorEnd" /><br />
-        Length: <input type="text" id="clipLength" />
-        <br />
-        Notes: <textarea id="notes" rows="3" cols="40"></textarea>
-        <br />
-        
-        <button id="save">Save</button>
-        <button id="deleteRow">Delete selected row</button>
-        
-        <br /><br />
-        <strong>Save history</strong><br />
-        <select id="saveHistory" size="10"></select>
-        </p>
-        
-        <p>
-            <strong>Save the captured rows to a CSV file.</strong>
-            <br />Click the button...
-            <button id="persistToTextArea">Persist!</button>
-            <br />Then just click in the text area and press CTRL-C and paste into a text file!
-        </p>
-        <textarea id="persistedCSV" wrap="off"></textarea>
-        
+            <div id="column1">       
+                <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]-->      
+                <!-- YouTube player is created in iframe here - see main.js -->
+                <div id="player"></div>
+                <!-- select hansard text -->
+                <h4>Select Corresponding Hansard Data</h4>
+                <select id="hansardSelect" size="10"></select>
+                <h4>Full Text of Selected Hansard Data</h4>
+                <textarea id="hansardFullText"></textarea>
+            </div> <!-- column1 -->
+            <div id="column2">
+                <h4>Load Video and Corresponding Hansard to Begin</h4>
+                <p>
+                    Council videos: <select id="videos"></select>
+                    <button id="loadVideo">Load Video</button>
+                    <button id="loadHansard">Load Hansard Data</button>
+                    <!-- Various hidden inputs here: -->
+                    <input id="currentTime" type="hidden" />
+                    <input type="hidden" id="videoUrl" />
+                    <input type="hidden" id="videoId" />
+                    <input type="hidden" id="videoTitle" />
+                    <input type="hidden" id="councillor" />
+                </p>
+                <p>
+                    <button id="play">Play</button>
+                    <button id="pause">Pause</button>
+                    <button id="reverseEvenMore">-30s</button>
+                    <button id="reverseMore">-10s</button>
+                    <button id="reverse">-5s</button>
+                    <button id="forward">+5s</button>
+                    <button id="forwardMore">+10s</button>
+                    <button id="forwardEvenMore">+30s</button>
+                </p>
+                
+                <h4>Councillor Start and End Time Recording</h4>
+                <p>
+                    <select id="councillors"></select>
+                    <button id="recordStart">Record Start Time</button>
+                    <button id="recordEnd">Record End Time</button><br />
+                </p>
+                <p>
+                    Speaking Type:
+                    <select id="speakingTypes">
+                        <option>Councillor Speaking</option>
+                        <option>Motion Reading</option>
+                        <option>Announcement</option>
+                        <option>Other</option>
+                    </select>
+                </p>
+                <p>         
+                    Start: <input type="text" id="councillorStart" />
+                    End: <input type="text" id="councillorEnd" />
+                    Length: <input type="text" id="clipLength" />
+                </p>
+                <p>         
+                    Notes: <textarea id="notes" rows="3" cols="40"></textarea>
+                </p>
+                <p>         
+                    <button id="save">Save</button>
+                </p>
+                <h4>Save History</h4>
+                <p>
+                    <select id="saveHistory" size="10"></select>
+                </p>
+                <p>
+                    <button id="deleteRow">Delete selected row</button>
+                </p>
+                <h4>Saving History to a JSON File</h4>
+                <p>
+                    Click this button:
+                    <button id="persistToTextArea">Persist!</button>
+                </p>
+                <p>
+                    Then just click in the text area and press CTRL-C and paste into a text file!
+                </p>
+                <textarea id="persistedJSON" wrap="off"></textarea>
+                
+            </div> <!-- column2 -->
+        </div> <!-- wrapper -->
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
-
-
-        </div> <!-- column2 -->
-        </div> <!-- wrapper -->
     </body>
 </html>

@@ -15,7 +15,7 @@ var videoNames = ["2014-01-29","2013-12-17", "2013-12-11", "2013-11-20",  "2013-
 var videoIds =  ["ZbHzXWE1hYs", "EvTTS1dR-xM", "d-UFuzJYIOE", "Gb7-bJbn8vM", "OHVBApCdZAM","e1D_CWBa1yI","zqG4yMqNYrc","HdHBab-HO3M","nIb47yirpbg","anWZeM4UstA","gd8Ws6wNzk4","37aqoCCYqFY","4XolNOj_E90","gg3ZsbJ-Y68","6G4eDzavccc","XMlO21fNdZ0"];
 var currentVidId;
 var currentVidName;
-var councillors = ["Clerk", "Browaty","Eadie","Fielding","Gerbasi","Havixbeck", "Katz", "Mayes","Nordman","Orlikow","Pagtakhan","Sharma","Smith","Steen","Swandel","Vandal","Wyatt"];
+var councillors =  ["Clerk", "Madam Speaker", "Mayor Katz", "Councillor Sharma", "Councillor Browaty", "Councillor Eadie", "Councillor Fielding", "Councillor Gerbasi", "Councillor Havixbeck", "Councillor Mayes", "Councillor Nordman", "Councillor Orlikow", "Councillor Pagtakhan", "Councillor Smith", "Councillor Steen", "Councillor Swandel", "Councillor Vandal", "Councillor Wyatt"];
 
 //DOM stuff
 var d = document;
@@ -30,7 +30,6 @@ var speakingTypesSelect = d.getElementById("speakingTypes");
 //councillor start and end
 var videoId = d.getElementById("videoId");
 var videoTitle = d.getElementById("videoTitle");
-var councillor = d.getElementById("councillor");
 var councillorStart = d.getElementById("councillorStart");
 var councillorEnd = d.getElementById("councillorEnd");
 var notes = d.getElementById("notes");
@@ -45,12 +44,6 @@ var persistTextarea = document.getElementById("persistedJSON");
 //set event listeners of buttons
 d.getElementById("play").addEventListener("click", play, false);
 d.getElementById("pause").addEventListener("click", pause, false);
-//d.getElementById("stop").addEventListener("click", stop, false);
-//d.getElementById("restart").addEventListener("click", restart, false);
-//d.getElementById("mute").addEventListener("click", mute, false);
-//d.getElementById("unmute").addEventListener("click", unmute, false);
-//d.getElementById("speedUp").addEventListener("click", speedUp, false);
-//d.getElementById("slowDown").addEventListener("click", slowDown, false);
 d.getElementById("recordStart").addEventListener("click", recordStart, false);
 d.getElementById("recordEnd").addEventListener("click", recordEnd, false);
 d.getElementById("save").addEventListener("click", saveRow, false);
@@ -150,19 +143,34 @@ function saveRow(){
         // Parsing out the selected hansard data into a js object using JSON.parse.
         var selectedHansardJSON = JSON.parse(hansardSelect.options[hansardSelect.selectedIndex].text);
         var speakingType = speakingTypesSelect.options[speakingTypesSelect.selectedIndex].text;
+        var selectedCouncillor = councillorsSelect.options[councillorsSelect.selectedIndex].value;
+        var validationError;
         
         // Warning if the handsard row type doesn't match the user selected speaking type.
         if ((selectedHansardJSON.type == 'speaker' && speakingType != 'Councillor Speaking')
             || (selectedHansardJSON.type == 'motion' && speakingType != 'Motion Reading')) {
-            if (!confirm("Selected speaking type doesn't match selected hansard row.\nOK to proceed. Cancel to fix.")) {
-                return;
-            }
+            validationError = "Selected speaking type doesn't match selected hansard row.";
+        }
+        
+        // Warning if the user selected speaker doesn't match the selected hansard row.
+        if ((selectedHansardJSON.type == 'speaker') && (selectedCouncillor != selectedHansardJSON.name)){
+            validationError = "Selected speaker doesn't match selected hansard row.";
+        }
+        
+        // Warn if clip length is zero.
+        if (clipLength.value == 0) {
+            validationError = "Are you sure you wish to save a record with a duration of zero? "
+        }
+        
+        // Display validation warning if there is one. Quit function if user hits cancel on confirm modal. 
+        if (validationError && !confirm(validationError + "\nOK to proceed. Cancel to fix.")) {
+            return;
         }
         
         var json_row = {
                         'video_id':     currentVidId,
                         'video_name':   currentVidName,
-                        'councillor':   councillor.value,
+                        'councillor':   selectedCouncillor,
                         'start_time':   councillorStart.value,
                         'end_time':     councillorEnd.value,
                         'length':       clipLength.value,
@@ -210,7 +218,6 @@ function persistToTextArea() {
 function recordStart() {
     videoId.value = currentVidId;
     videoTitle.value = currentVidName;
-    councillor.value = councillorsSelect.options[councillorsSelect.selectedIndex].value;
     var roundedTime = Math.round(player.getCurrentTime()*10)/10 //to the tenth of a second
     councillorStart.value = roundedTime;
     showCurrentTime();

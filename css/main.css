@@ -100,7 +100,7 @@ textarea {
  
     /* For two-column layout */
     div#wrapper {
-        width: 1100px;
+        width: 1200px;
         overflow:auto;
         margin: 2em auto;
     }

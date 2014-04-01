@@ -15,7 +15,7 @@ var videoNames = ["2014-01-29","2013-12-17", "2013-12-11", "2013-11-20",  "2013-
 var videoIds =  ["ZbHzXWE1hYs", "EvTTS1dR-xM", "d-UFuzJYIOE", "Gb7-bJbn8vM", "OHVBApCdZAM","e1D_CWBa1yI","zqG4yMqNYrc","HdHBab-HO3M","nIb47yirpbg","anWZeM4UstA","gd8Ws6wNzk4","37aqoCCYqFY","4XolNOj_E90","gg3ZsbJ-Y68","6G4eDzavccc","XMlO21fNdZ0"];
 var currentVidId;
 var currentVidName;
-var councillors = ["CLERK", "Browaty","Eadie","Fielding","Gerbasi","Havixbeck", "Katz", "Mayes","Nordman","Orlikow","Pagtakhan","Sharma","Smith","Steen","Swandel","Vandal","Wyatt"];
+var councillors =  ["Clerk", "Madam Speaker", "Mayor Katz", "Councillor Sharma", "Councillor Browaty", "Councillor Eadie", "Councillor Fielding", "Councillor Gerbasi", "Councillor Havixbeck", "Councillor Mayes", "Councillor Nordman", "Councillor Orlikow", "Councillor Pagtakhan", "Councillor Smith", "Councillor Steen", "Councillor Swandel", "Councillor Vandal", "Councillor Wyatt"];
 
 //DOM stuff
 var d = document;
@@ -30,25 +30,20 @@ var speakingTypesSelect = d.getElementById("speakingTypes");
 //councillor start and end
 var videoId = d.getElementById("videoId");
 var videoTitle = d.getElementById("videoTitle");
-var councillor = d.getElementById("councillor");
 var councillorStart = d.getElementById("councillorStart");
 var councillorEnd = d.getElementById("councillorEnd");
 var notes = d.getElementById("notes");
 var clipLength = d.getElementById("clipLength");
 var hansardSelect = d.getElementById("hansardSelect");
+var hansardFullText = d.getElementById("hansardFullText");
 //saving
 var saveHistory = d.getElementById("saveHistory");
+var persistTextarea = document.getElementById("persistedJSON");
 
 
 //set event listeners of buttons
 d.getElementById("play").addEventListener("click", play, false);
 d.getElementById("pause").addEventListener("click", pause, false);
-//d.getElementById("stop").addEventListener("click", stop, false);
-//d.getElementById("restart").addEventListener("click", restart, false);
-//d.getElementById("mute").addEventListener("click", mute, false);
-//d.getElementById("unmute").addEventListener("click", unmute, false);
-//d.getElementById("speedUp").addEventListener("click", speedUp, false);
-//d.getElementById("slowDown").addEventListener("click", slowDown, false);
 d.getElementById("recordStart").addEventListener("click", recordStart, false);
 d.getElementById("recordEnd").addEventListener("click", recordEnd, false);
 d.getElementById("save").addEventListener("click", saveRow, false);
@@ -62,13 +57,21 @@ d.getElementById("reverse").addEventListener("click", reverse, false);
 d.getElementById("forward").addEventListener("click", forward, false);
 d.getElementById("forwardMore").addEventListener("click", forwardMore, false);
 d.getElementById("forwardEvenMore").addEventListener("click", forwardEvenMore, false);
-d.getElementById("persistedCSV").addEventListener("click", function() {
+d.getElementById("persistedJSON").addEventListener("click", function() {
     // This ensures that when someone clicks on the persisted CSV the textarea selects-all.
     this.focus();
     this.select();
 }, false);
 councillorStart.addEventListener("blur", calculateClipLength, false);
 councillorEnd.addEventListener("blur", calculateClipLength, false);
+hansardSelect.addEventListener("change", function() {
+    // When hansard data is selected or change, display the data in the
+    // textarea below the hansard select.
+    var selected = hansardSelect.options[hansardSelect.selectedIndex];
+    if (selected) {
+       hansardFullText.value = selected.text;
+    }
+}, false);
 
 
 
@@ -80,7 +83,7 @@ function onYouTubeIframeAPIReady() {
     //should load City of Winnipeg playlist
     //"http://www.youtube.com/channel/UClbGHHM4vS_wK9tVdOld8pQ"
     //and allow selection of the different videos
-        //populate videos
+    //populate videos
     for(var i = 0; i < videoIds.length; i++) {
         var o = document.createElement('option');
         o.innerHTML = videoNames[i];
@@ -95,44 +98,12 @@ function onYouTubeIframeAPIReady() {
         o.value = councillors[i];
         councillorsSelect.appendChild(o);
     }
-    
-    
-  /*player = new YT.Player('player', {
-    height: '390',
-    width: '640',
-    //height:195,
-    //width:320,
-    videoId: 'tmCKnVaU7H0',
-    //videoId: vidId,
-    events: {
-      'onReady': onPlayerReady,
-      'onStateChange': onPlayerStateChange
-    }
-  });*/
 }
 
 
 //The API will call this function when the video player is ready.
 function onPlayerReady(event) {
-    
-    //for using local HTML storage
-    if(typeof(Storage)!=="undefined")
-    {
-        //storage gtg
-    }
-    else
-    {
-        alert("Your browser doesn't support local storage, so this ain't gonna work.");
-    }
-    
-    //event.target.playVideo();
-  
     videoUrl.value = player.getVideoUrl();
-  
-
-  //debug
-  //console.dir(player);
-  //console.dir (event.target);
 }
 
 //The API calls this function when the player's state changes.
@@ -157,13 +128,6 @@ function onPlayerStateChange(event) {
             state = "Cued";
             break;
     }
-    //videoState.innerHTML = state;
-    
-  //stop after 6 seconds.
-  /*if (event.data == YT.PlayerState.PLAYING && !done) {
-    setTimeout(stop, 6000);
-    done = true;
-  }*/
 }
 
 
@@ -175,11 +139,54 @@ function saveRow(){
     var option = d.createElement("option");
     var startTimeForUrl = Math.floor(councillorStart.value); //with no fractional part
     var videoUrlWithStartTime = "www.youtube.com/watch?v=" + currentVidId + "&t=" + startTimeForUrl;
-    var selectedHansardData = hansardSelect.options[hansardSelect.selectedIndex].text;
-    var speakingType = speakingTypesSelect.options[speakingTypesSelect.selectedIndex].text;
-    var text = d.createTextNode("\"" + currentVidId +"\",\"" + currentVidName + "\",\"" + councillor.value + "\"," + councillorStart.value + "," + councillorEnd.value + "," + clipLength.value + ",\"" + videoUrlWithStartTime + "\",\"" + notes.value + "\",\"" + speakingType + "\"," + selectedHansardData);
-    option.appendChild(text);
-    saveHistory.appendChild(option);
+    if (hansardSelect.options[hansardSelect.selectedIndex]) {
+        // Parsing out the selected hansard data into a js object using JSON.parse.
+        var selectedHansardJSON = JSON.parse(hansardSelect.options[hansardSelect.selectedIndex].text);
+        var speakingType = speakingTypesSelect.options[speakingTypesSelect.selectedIndex].text;
+        var selectedCouncillor = councillorsSelect.options[councillorsSelect.selectedIndex].value;
+        var validationError;
+        
+        // Warning if the handsard row type doesn't match the user selected speaking type.
+        if ((selectedHansardJSON.type == 'speaker' && speakingType != 'Councillor Speaking')
+            || (selectedHansardJSON.type == 'motion' && speakingType != 'Motion Reading')) {
+            validationError = "Selected speaking type doesn't match selected hansard row.";
+        }
+        
+        // Warning if the user selected speaker doesn't match the selected hansard row.
+        if ((selectedHansardJSON.type == 'speaker') && (selectedCouncillor != selectedHansardJSON.name)){
+            validationError = "Selected speaker doesn't match selected hansard row.";
+        }
+        
+        // Warn if clip length is zero.
+        if (clipLength.value == 0) {
+            validationError = "Are you sure you wish to save a record with a duration of zero? "
+        }
+        
+        // Display validation warning if there is one. Quit function if user hits cancel on confirm modal. 
+        if (validationError && !confirm(validationError + "\nOK to proceed. Cancel to fix.")) {
+            return;
+        }
+        
+        var json_row = {
+                        'video_id':     currentVidId,
+                        'video_name':   currentVidName,
+                        'councillor':   selectedCouncillor,
+                        'start_time':   councillorStart.value,
+                        'end_time':     councillorEnd.value,
+                        'length':       clipLength.value,
+                        'video_url':    videoUrlWithStartTime,
+                        'notes':        notes.value,
+                        'type':         speakingType,
+                        'hansard':      selectedHansardJSON
+                        };
+        
+        // Stringifying the data we have just created into JSON and adding to the saveHistory select.
+        var text = d.createTextNode(JSON.stringify(json_row));
+        option.appendChild(text);
+        saveHistory.appendChild(option);
+    } else {
+        alert("You need to select an entry from the Hansard text before you can save.")
+    }
 }
 
 //deletes selected row from multi-line select
@@ -199,12 +206,11 @@ function deleteRow(){
 function persistToTextArea() {
     //create column headers row
     
-    var csvData = "";
+    var jsonData = [];
     for(var i = 0; i < saveHistory.length; i++) {
-        csvData += saveHistory.options[i].text + "\n";
+        jsonData.push(JSON.parse(saveHistory.options[i].text));
     }
-    var persist_textarea = document.getElementById("persistedCSV");
-    persist_textarea.innerHTML = csvData;
+    persistTextarea.value = JSON.stringify(jsonData);
 }
 
 
@@ -212,7 +218,6 @@ function persistToTextArea() {
 function recordStart() {
     videoId.value = currentVidId;
     videoTitle.value = currentVidName;
-    councillor.value = councillorsSelect.options[councillorsSelect.selectedIndex].value;
     var roundedTime = Math.round(player.getCurrentTime()*10)/10 //to the tenth of a second
     councillorStart.value = roundedTime;
     showCurrentTime();
@@ -270,14 +275,10 @@ function loadHansard() {
     for(var i=0; i<h.length; i++) {
         //types: speaker, motion, section, vote
         if(h[i].type == "speaker" || h[i].type == "motion") {
-            
+            var json_row = h[i];
             var option = d.createElement("option");
-            var text;
-            if(h[i].type == "speaker") {
-                text = d.createTextNode("\"" + h[i].name + "\",\"" + h[i].spoken + "\"");
-            } else { //motion
-                 text = d.createTextNode("\"" + h[i].name + "\",\"" + h[i].motion_text + "\",\"" + h[i].moved_by + "\",\"" + h[i].seconded_by + "\"");
-            }
+            // Stringify our data into JSON to store in the hansardSelect.
+            var text = d.createTextNode(JSON.stringify(json_row));
             option.appendChild(text);
             hansardSelect.appendChild(option);
         }
@@ -304,61 +305,14 @@ function forwardMore() {
 function forwardEvenMore() {
     player.seekTo(player.getCurrentTime() + 30, true);
 }
-
-
 function showCurrentTime() {
     currentTime.value = player.getCurrentTime();
 }
-
-
 function play() {
-    //tryingTo.innerHTML = "Play";
     player.playVideo();
     showCurrentTime();
 }
-
 function pause() {
-    //tryingTo.innerHTML = "Pause";
     player.pauseVideo();
     showCurrentTime();
 }
-
-/*
-function stop() {
-    tryingTo.innerHTML = "Stop";
-    player.stopVideo();
-    showCurrentTime();
-}
-
-function restart() {
-    tryingTo.innerHTML = "Restart";
-    player.seekTo(0, true);
-    player.playVideo();
-    showCurrentTime();
-}
-
-function mute() {
-    tryingTo.innerHTML = "Mute";
-    player.mute();
-}
-
-function unmute() {
-    tryingTo.innerHTML = "Unmute";
-    player.unMute();
-}
-
-function speedUp() {
-    tryingTo.innerHTML = "Speed up";
-    player.setPlaybackRate(player.getPlaybackRate() + 0.5);
-    speed.value = player.getPlaybackRate();
-}
-
-function slowDown() {
-    tryingTo.innerHTML = "Slow down";
-    player.setPlaybackRate(player.getPlaybackRate() - 0.5);
-    speed.value = player.getPlaybackRate();
-    
-}
-*/
-
-

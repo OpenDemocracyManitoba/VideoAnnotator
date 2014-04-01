@@ -100,7 +100,9 @@ textarea {
  
     /* For two-column layout */
     div#wrapper {
+        width: 1200px;
         overflow:auto;
+        margin: 2em auto;
     }
     
     div#column1 {
@@ -109,6 +111,7 @@ textarea {
     }
     
     div#column2 {
+        margin-top: -1.33em;
         float:left;
         width:50%;
     }
@@ -116,6 +119,19 @@ textarea {
     select#hansardSelect {
         width:512px;
         overflow:auto;
+    }
+    
+    textarea#hansardFullText {
+        width: 512px;
+        height: 200px;
+    }
+    
+    input#councillorStart, input#councillorEnd, input#clipLength {
+        width: 70px;
+    }
+    
+    textarea#notes {
+        width: 420px;
     }
 
 

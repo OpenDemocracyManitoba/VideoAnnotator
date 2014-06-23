@@ -73,6 +73,12 @@ hansardSelect.addEventListener("change", function() {
     }
 }, false);
 
+// Warn users if they try to navigate away from the app.
+window.addEventListener("beforeunload", function (e) {
+    var confirmationMessage = "Are you sure you wish to navigate away from the app? Unsaved changes will be lost.";
+    (e || window.event).returnValue = confirmationMessage;     //Gecko + IE
+    return confirmationMessage;                                //Webkit, Safari, Chrome etc.
+});
 
 
 //************************************************* Initialization Events

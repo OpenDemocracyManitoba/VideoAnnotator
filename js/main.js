@@ -1,5 +1,4 @@
 //figuring out the youtube js api (for iframe embedded video)
-
 // 2. This code loads the IFrame Player API code asynchronously.
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
@@ -15,7 +14,7 @@ var videoNames = ["2014-01-29","2013-12-17", "2013-12-11", "2013-11-20",  "2013-
 var videoIds =  ["ZbHzXWE1hYs", "EvTTS1dR-xM", "d-UFuzJYIOE", "Gb7-bJbn8vM", "OHVBApCdZAM","e1D_CWBa1yI","zqG4yMqNYrc","HdHBab-HO3M","nIb47yirpbg","anWZeM4UstA","gd8Ws6wNzk4","37aqoCCYqFY","4XolNOj_E90","gg3ZsbJ-Y68","6G4eDzavccc","XMlO21fNdZ0"];
 var currentVidId;
 var currentVidName;
-var councillors =  ["Clerk", "Madam Speaker", "Mayor Katz", "Councillor Sharma", "Councillor Browaty", "Councillor Eadie", "Councillor Fielding", "Councillor Gerbasi", "Councillor Havixbeck", "Councillor Mayes", "Councillor Nordman", "Councillor Orlikow", "Councillor Pagtakhan", "Councillor Smith", "Councillor Steen", "Councillor Swandel", "Councillor Vandal", "Councillor Wyatt"];
+var councillors =  ["Other", "Clerk", "Madam Speaker", "Mayor Katz", "Councillor Sharma", "Councillor Browaty", "Councillor Eadie", "Councillor Fielding", "Councillor Gerbasi", "Councillor Havixbeck", "Councillor Mayes", "Councillor Nordman", "Councillor Orlikow", "Councillor Pagtakhan", "Councillor Smith", "Councillor Steen", "Councillor Swandel", "Councillor Vandal", "Councillor Wyatt"];
 
 //DOM stuff
 var d = document;
@@ -57,6 +56,8 @@ d.getElementById("reverse").addEventListener("click", reverse, false);
 d.getElementById("forward").addEventListener("click", forward, false);
 d.getElementById("forwardMore").addEventListener("click", forwardMore, false);
 d.getElementById("forwardEvenMore").addEventListener("click", forwardEvenMore, false);
+d.getElementById("nextHansardRow").addEventListener("click", selectNextHansardRow, false);
+d.getElementById("previousHansardRow").addEventListener("click", selectPreviousHansardRow, false);
 d.getElementById("persistedJSON").addEventListener("click", function() {
     // This ensures that when someone clicks on the persisted CSV the textarea selects-all.
     this.focus();
@@ -64,14 +65,15 @@ d.getElementById("persistedJSON").addEventListener("click", function() {
 }, false);
 councillorStart.addEventListener("blur", calculateClipLength, false);
 councillorEnd.addEventListener("blur", calculateClipLength, false);
-hansardSelect.addEventListener("change", function() {
-    // When hansard data is selected or change, display the data in the
-    // textarea below the hansard select.
-    var selected = hansardSelect.options[hansardSelect.selectedIndex];
-    if (selected) {
-       hansardFullText.value = selected.text;
+
+
+hansardSelect.addEventListener("change", hansardSelectChanged , false);
+
+function hansardSelectChanged() {
+    if (selectedHansardRow()) {
+        onHansardRowChange();
     }
-}, false);
+}
 
 // Warn users if they try to navigate away from the app.
 window.addEventListener("beforeunload", function (e) {
@@ -80,7 +82,98 @@ window.addEventListener("beforeunload", function (e) {
     return confirmationMessage;                                //Webkit, Safari, Chrome etc.
 });
 
+// ************************************************** Helper Functions
 
+function onHansardRowChange() {
+    hansardFullText.value = selectedHansardRowText();
+    setSpeakerName();
+    setSpeakerType();
+}
+
+// Set the "Speaking Type" select drop-down from the selected Hansard data.
+function setSpeakerType() {
+    var speakerType = selectedHansardJSON().type;
+    setSelectByValue(speakingTypesSelect, speakerType);
+}
+
+function setSpeakerName() {
+    setSelectByValue(councillorsSelect, selectedHansardCouncillorName());
+    if (councillorsSelect.selectedIndex == 0) {
+        notes.value = selectedHansardCouncillorName();
+    } else {
+        notes.value = "";
+    }
+}
+
+function selectedHansardCouncillorName() {
+    var councillorName,
+        hansardRow = selectedHansardJSON();
+    switch(hansardRow.type) {
+        case 'vote':
+            councillorName = 'Clerk';
+            break;
+        case 'motion':
+            councillorName = hansardRow.moved_by;
+            break;
+        default:
+            councillorName = hansardRow.name;
+    }
+    
+    return councillorName;
+}
+
+function selectNextHansardRow() {
+    var selectedIndex = hansardSelect.selectedIndex,
+        selectLength  = hansardSelect.options.length;
+        
+    if (selectedIndex != selectLength - 1) {
+        selectedIndex++;
+    }
+
+    hansardSelect.selectedIndex = selectedIndex;
+
+    onHansardRowChange();
+}
+
+function selectPreviousHansardRow() {
+    var selectedIndex = hansardSelect.selectedIndex,
+        selectLength  = hansardSelect.options.length;
+        
+    if (selectedIndex != 0) {
+        selectedIndex--;
+    }
+
+    hansardSelect.selectedIndex = selectedIndex;
+
+
+    onHansardRowChange();
+}
+
+function selectedHansardRow() {
+    return hansardSelect.options[hansardSelect.selectedIndex];
+}
+
+function selectedHansardRowText() {
+    return selectedHansardRow().text;
+}
+
+function selectedHansardJSON() {
+    return JSON.parse(selectedHansardRowText());
+}
+
+function setSelectByValue(selectEntity, valueToSelect) {
+    var foundValueAndSetIndex = false;
+    for(var i = 0, j = selectEntity.options.length; i < j; ++i) {
+        if(selectEntity.options[i].value === valueToSelect) {
+           selectEntity.selectedIndex = i;
+           foundValueAndSetIndex = true;
+           break;
+        }
+    }
+    if (!foundValueAndSetIndex) {
+        selectEntity.selectedIndex = 0;
+    }
+}
 //************************************************* Initialization Events
 //This function creates an <iframe> (and YouTube player)
 //after the API code downloads.
@@ -153,7 +246,7 @@ function saveRow(){
         var validationError;
         
         // Warning if the handsard row type doesn't match the user selected speaking type.
-        if ((selectedHansardJSON.type == 'speaker' && speakingType != 'Councillor Speaking')
+        if ((selectedHansardJSON.type == 'speaker' && speakingType != 'Speaking')
             || (selectedHansardJSON.type == 'motion' && speakingType != 'Motion Reading')) {
             validationError = "Selected speaking type doesn't match selected hansard row.";
         }
@@ -280,7 +373,7 @@ function loadHansard() {
     var h = hansard.hansard;
     for(var i=0; i<h.length; i++) {
         //types: speaker, motion, section, vote
-        if(h[i].type == "speaker" || h[i].type == "motion") {
+        if(h[i].type == "speaker" || h[i].type == "motion" || h[i].type == "vote") {
             var json_row = h[i];
             var option = d.createElement("option");
             // Stringify our data into JSON to store in the hansardSelect.

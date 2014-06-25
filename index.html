@@ -24,6 +24,8 @@
                 <div id="player"></div>
                 <!-- select hansard text -->
                 <h4>Select Corresponding Hansard Data</h4>
+                <button id="previousHansardRow">Previous</button>
+                <button id="nextHansardRow">Next</button>
                 <select id="hansardSelect" size="10"></select>
                 <h4>Full Text of Selected Hansard Data</h4>
                 <textarea id="hansardFullText"></textarea>
@@ -60,10 +62,11 @@
                 <p>
                     Speaking Type:
                     <select id="speakingTypes">
-                        <option>Councillor Speaking</option>
-                        <option>Motion Reading</option>
-                        <option>Announcement</option>
-                        <option>Other</option>
+                        <option value="other">Other</option>
+                        <option value="announcement">Announcement</option>
+                        <option value="speaker">Speaking</option>
+                        <option value="motion">Motion Reading</option>
+                        <option value="vote">Vote</option>
                     </select>
                 </p>
                 <p>         

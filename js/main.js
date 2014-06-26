@@ -117,7 +117,11 @@ function truncateText(originalText) {
     }
 }
 
-function setSpeakerText() {
+function resetFormTextfields() {
+    councillorStart.value = '';
+    councillorEnd.value   = '';
+    clipLength.value      = '';
+    notes.value           = '';
 }
 
 // Set the "Speaking Type" select drop-down from the selected Hansard data.
@@ -326,6 +330,7 @@ function saveRow(){
         option.appendChild(text);
         saveHistory.appendChild(option);
         selectNextHansardRow();
+        resetFormTextfields();
     } else {
         alert("You need to select an entry from the Hansard text before you can save.")
     }

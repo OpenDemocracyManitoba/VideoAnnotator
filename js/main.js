@@ -88,6 +88,36 @@ function onHansardRowChange() {
     hansardFullText.value = selectedHansardRowText();
     setSpeakerName();
     setSpeakerType();
+    setSpeakersText();
+}
+
+function setSpeakersText() {
+    var g = currentHansardGroup();
+    for (var prop in g) {
+        if (g.hasOwnProperty(prop)) {
+            var element = document.getElementById(prop);
+            element.innerHTML = '';
+            var h4 = document.createElement('h4');
+            h4.innerHTML = g[prop].name;
+            var p = document.createElement('p');
+            p.innerHTML = g[prop].spoken ? truncateText(g[prop].spoken) : '';
+            element.appendChild(h4);
+            element.appendChild(p);
+        }
+    } 
+    
+}
+
+function truncateText(originalText) {
+    if (originalText.length < 150) {
+        return originalText;
+    } else {
+        var length = originalText.length;
+        return originalText.substring(0, 75) + ' ... ' + originalText.substring(length-75, length);
+    }
+}
+
+function setSpeakerText() {
 }
 
 // Set the "Speaking Type" select drop-down from the selected Hansard data.
@@ -147,6 +177,18 @@ function selectPreviousHansardRow() {
 
 
     onHansardRowChange();
+}
+
+function currentHansardGroup() {
+    var index   = hansardSelect.selectedIndex,
+        length  = hansardSelect.options.length;
+
+    var previous = (index == 0) ? { 'name': '', 'spoken':'' } : JSON.parse(hansardSelect.options[index - 1].text);
+    var current  = JSON.parse(hansardSelect.options[index].text);
+    var next     = (index == length - 1) ? { 'name': '', 'spoken':'' } : JSON.parse(hansardSelect.options[index + 1].text);
+    return { 'previousSpeaker': previous, 
+             'currentSpeaker':  current,
+             'nextSpeaker':     next };
 }
 
 function selectedHansardRow() {
@@ -252,7 +294,7 @@ function saveRow(){
         }
         
         // Warning if the user selected speaker doesn't match the selected hansard row.
-        if ((selectedHansardJSON.type == 'speaker') && (selectedCouncillor != selectedHansardJSON.name)){
+        if ((selectedHansardJSON.type == 'speaker') && (selectedCouncillor != 'Other') && (selectedCouncillor != selectedHansardJSON.name)){
             validationError = "Selected speaker doesn't match selected hansard row.";
         }
         
@@ -283,6 +325,7 @@ function saveRow(){
         var text = d.createTextNode(JSON.stringify(json_row));
         option.appendChild(text);
         saveHistory.appendChild(option);
+        selectNextHansardRow();
     } else {
         alert("You need to select an entry from the Hansard text before you can save.")
     }
@@ -382,6 +425,7 @@ function loadHansard() {
             hansardSelect.appendChild(option);
         }
     }
+    selectNextHansardRow();
 }
 
 

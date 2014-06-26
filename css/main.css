@@ -107,7 +107,8 @@ textarea {
     
     div#column1 {
         float:left;
-        width:50%
+        width:45%;
+        margin-right: 5%;
     }
     
     div#column2 {
@@ -132,6 +133,19 @@ textarea {
     
     textarea#notes {
         width: 420px;
+    }
+
+    #previousSpeaker, #nextSpeaker {
+        color: grey;
+        font-size: 0.8em;
+    }
+
+    #previousSpeaker h4, #nextSpeaker h4, #currentSpeaker h4 {
+        margin-bottom: 0;
+    }
+    
+    #previousSpeaker p, #nextSpeaker p, #currentSpeaker p {
+        margin-top: 0;
     }
 
 

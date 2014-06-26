@@ -22,10 +22,15 @@
                 <![endif]-->      
                 <!-- YouTube player is created in iframe here - see main.js -->
                 <div id="player"></div>
+                <div>
+                    <button id="previousHansardRow">Previous Speaker</button>
+                    <button id="nextHansardRow">Next Speaker</button>
+                </div>
+                <div id="previousSpeaker"></div>
+                <div id="currentSpeaker"></div>
+                <div id="nextSpeaker"></div>
                 <!-- select hansard text -->
                 <h4>Select Corresponding Hansard Data</h4>
-                <button id="previousHansardRow">Previous</button>
-                <button id="nextHansardRow">Next</button>
                 <select id="hansardSelect" size="10"></select>
                 <h4>Full Text of Selected Hansard Data</h4>
                 <textarea id="hansardFullText"></textarea>

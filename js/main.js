@@ -99,8 +99,18 @@ function setSpeakersText() {
             element.innerHTML = '';
             var h4 = document.createElement('h4');
             h4.innerHTML = g[prop].name;
+            if (g[prop].moved_by) {
+                h4.innerHTML += " (" + g[prop].moved_by + ")";
+            }
             var p = document.createElement('p');
-            p.innerHTML = g[prop].spoken ? truncateText(g[prop].spoken) : '';
+            var spoken = g[prop].spoken ? truncateText(g[prop].spoken) : '';
+            if (!spoken && g[prop].motion_text) {
+                spoken = truncateText(g[prop].motion_text);
+            }
+            if (!spoken && g[prop].outcome) {
+                spoken = g[prop].outcome + '<br>yeas: ' + g[prop].yeas + '<br>nays: ' + g[prop].nays;
+            }
+            p.innerHTML = spoken;
             element.appendChild(h4);
             element.appendChild(p);
         }
@@ -122,6 +132,47 @@ function resetFormTextfields() {
     councillorEnd.value   = '';
     clipLength.value      = '';
     notes.value           = '';
+}
+
+String.prototype.toHHMMSS = function () {
+    var sec_num = parseInt(this, 10); // don't forget the second param
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    var time;
+    time  = (hours == 0) ? '' : hours + ':';
+    time += minutes + ':' + seconds;
+    return time;
+}
+
+function wordCount(stringToCount) {
+    if (!stringToCount) return 0;
+    var regex = /\s+/gi;
+    var wordCount = stringToCount.trim().replace(regex, ' ').split(' ').length;
+    return wordCount;
+}
+
+function displayLastSavedDetails(jsonrow) {
+    var lastSavedDetailsElement = document.getElementById('lastSavedDetails');
+    var h4 = document.createElement('h4');
+    var strong = document.createElement('strong');
+    var p  = document.createElement('p');
+    var spoken = (jsonrow.hansard.spoken) ? jsonrow.hansard.spoken : jsonrow.hansard.motion_text;
+    var timeText = document.createTextNode(' said ' + wordCount(spoken) + 
+                                           ' words in ' + jsonrow.length.toHHMMSS() + 
+                                           ' from ' + jsonrow.start_time.toHHMMSS() + 
+                                           ' to ' + jsonrow.end_time.toHHMMSS() + '.');
+    lastSavedDetailsElement.innerHTML = '';
+    h4.innerHTML = 'Last Saved';
+    strong.innerHTML = jsonrow.councillor;
+    p.appendChild(strong);
+    p.appendChild(timeText);
+    lastSavedDetailsElement.appendChild(h4);
+    lastSavedDetailsElement.appendChild(p);
 }
 
 // Set the "Speaking Type" select drop-down from the selected Hansard data.
@@ -331,6 +382,7 @@ function saveRow(){
         saveHistory.appendChild(option);
         selectNextHansardRow();
         resetFormTextfields();
+        displayLastSavedDetails(json_row);
     } else {
         alert("You need to select an entry from the Hansard text before you can save.")
     }

@@ -147,7 +147,10 @@ textarea {
     #previousSpeaker p, #nextSpeaker p, #currentSpeaker p {
         margin-top: 0;
     }
-
+    
+    #lastSavedDetails p {
+        font-size: 0.9em;
+    }
 
 
 

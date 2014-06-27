@@ -491,6 +491,8 @@ function loadVideo() {
 
 function loadHansard() {
     //load hansard JSON file data into multi-line select
+    // The 'hansard' variable is a global loaded by the loadVideo function.
+    // In loadVideo hansard.json files are loaded into the hansard variable.
     var h = hansard.hansard;
     for(var i=0; i<h.length; i++) {
         //types: speaker, motion, section, vote

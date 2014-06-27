@@ -35,6 +35,7 @@ var notes = d.getElementById("notes");
 var clipLength = d.getElementById("clipLength");
 var hansardSelect = d.getElementById("hansardSelect");
 var hansardFullText = d.getElementById("hansardFullText");
+var wordsPerMinute = d.getElementById("wordsPerMinute");
 //saving
 var saveHistory = d.getElementById("saveHistory");
 var persistTextarea = document.getElementById("persistedJSON");
@@ -93,24 +94,36 @@ function onHansardRowChange() {
 
 function setSpeakersText() {
     var g = currentHansardGroup();
-    for (var prop in g) {
-        if (g.hasOwnProperty(prop)) {
-            var element = document.getElementById(prop);
+    for (var key in g) {
+        if (g.hasOwnProperty(key)) {
+            var currentSpeaker = g[key] 
+            var element = document.getElementById(key);
             element.innerHTML = '';
             var h4 = document.createElement('h4');
-            h4.innerHTML = g[prop].name;
-            if (g[prop].moved_by) {
-                h4.innerHTML += " (" + g[prop].moved_by + ")";
+            h4.innerHTML = currentSpeaker.name;
+            if (currentSpeaker.moved_by) {
+                h4.innerHTML += " (" + currentSpeaker.moved_by + ")";
             }
             var p = document.createElement('p');
-            var spoken = g[prop].spoken ? truncateText(g[prop].spoken) : '';
-            if (!spoken && g[prop].motion_text) {
-                spoken = truncateText(g[prop].motion_text);
+
+            var spoken = '';
+            if (currentSpeaker.spoken) {
+                spoken = currentSpeaker.spoken;
+            } else if (currentSpeaker.motion_text) {
+                spoken = currentSpeaker.motion_text;
+            } else if (currentSpeaker.outcome) {
+                spoken = currentSpeaker.outcome + ' -- yeas: ' + currentSpeaker.yeas + ' -- nays: ' + currentSpeaker.nays;
             }
-            if (!spoken && g[prop].outcome) {
-                spoken = g[prop].outcome + '<br>yeas: ' + g[prop].yeas + '<br>nays: ' + g[prop].nays;
+
+            var wordsSpoken = wordCount(spoken);
+            if (wordsSpoken > 0) {
+                var wpm = wordsPerMinute.value;
+                var spokenTimeGuess = 60 * wordsSpoken / wpm;
+                spokenTimeGuess = ('' + spokenTimeGuess).toHHMMSS();
+                spoken = wordsSpoken + ' words - ' + spokenTimeGuess + '? - ' + spoken;
             }
-            p.innerHTML = spoken;
+
+            p.innerHTML  = truncateText(spoken);
             element.appendChild(h4);
             element.appendChild(p);
         }
@@ -156,16 +169,24 @@ function wordCount(stringToCount) {
     return wordCount;
 }
 
+function twoDecimalRound(number) {
+    return Math.round(100 * number) / 100;
+}
+
 function displayLastSavedDetails(jsonrow) {
     var lastSavedDetailsElement = document.getElementById('lastSavedDetails');
     var h4 = document.createElement('h4');
     var strong = document.createElement('strong');
     var p  = document.createElement('p');
     var spoken = (jsonrow.hansard.spoken) ? jsonrow.hansard.spoken : jsonrow.hansard.motion_text;
-    var timeText = document.createTextNode(' said ' + wordCount(spoken) + 
-                                           ' words in ' + jsonrow.length.toHHMMSS() + 
-                                           ' from ' + jsonrow.start_time.toHHMMSS() + 
-                                           ' to ' + jsonrow.end_time.toHHMMSS() + '.');
+    var wordsSpoken = wordCount(spoken);
+    var lengthInMinutes = twoDecimalRound(jsonrow.length / 60);
+    var wordsPerMinute = Math.round(wordsSpoken / lengthInMinutes);
+    var timeText = document.createTextNode(' said ' + wordsSpoken + 
+                                           ' words in ' + lengthInMinutes + 
+                                           ' minutes, at a rate of ' + wordsPerMinute + ' words per minute.' + 
+                                           ' {' + jsonrow.start_time.toHHMMSS() + 
+                                           ' - ' + jsonrow.end_time.toHHMMSS() + '}'); 
     lastSavedDetailsElement.innerHTML = '';
     h4.innerHTML = 'Last Saved';
     strong.innerHTML = jsonrow.councillor;

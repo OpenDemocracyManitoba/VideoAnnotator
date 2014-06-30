@@ -22,22 +22,6 @@
                 <![endif]-->      
                 <!-- YouTube player is created in iframe here - see main.js -->
                 <div id="player"></div>
-                <div>
-                    <button id="previousHansardRow">Previous Speaker</button>
-                    <button id="nextHansardRow">Next Speaker</button>
-                    <label for="wordsPerMinute">Words Per Minute</label>
-                    <input id="wordsPerMinute" type="number" value="100">
-                </div>
-                <div id="previousSpeaker"></div>
-                <div id="currentSpeaker"></div>
-                <div id="nextSpeaker"></div>
-                <!-- select hansard text -->
-                <h4>Select Corresponding Hansard Data</h4>
-                <select id="hansardSelect" size="10"></select>
-                <h4>Full Text of Selected Hansard Data</h4>
-                <textarea id="hansardFullText"></textarea>
-            </div> <!-- column1 -->
-            <div id="column2">
                 <h4>Load Video and Corresponding Hansard to Begin</h4>
                 <p>
                     Council videos: <select id="videos"></select>
@@ -49,6 +33,22 @@
                     <input type="hidden" id="videoId" />
                     <input type="hidden" id="videoTitle" />
                 </p>
+                <!-- select hansard text -->
+                <h4>Hansard Data</h4>
+                <select id="hansardSelect" size="10"></select>
+                <h4>Full Text of Selected Hansard Data</h4>
+                <textarea id="hansardFullText"></textarea>
+            </div> <!-- column1 -->
+            <div id="column2">
+                <div>
+                    <button id="previousHansardRow">Previous Speaker</button>
+                    <button id="nextHansardRow">Next Speaker</button>
+                    <label for="wordsPerMinute">Words Per Minute</label>
+                    <input id="wordsPerMinute" type="number" value="100">
+                </div>
+                <div id="previousSpeaker"></div>
+                <div id="currentSpeaker"></div>
+                <div id="nextSpeaker"></div>
                 <p>
                     <button id="play">Play</button>
                     <button id="pause">Pause</button>
@@ -59,8 +59,6 @@
                     <button id="forwardMore">+10s</button>
                     <button id="forwardEvenMore">+30s</button>
                 </p>
-                
-                <h4>Councillor Start and End Time Recording</h4>
                 <p>
                     <select id="councillors"></select>
                     <button id="recordStart">Record Start Time</button>

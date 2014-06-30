@@ -112,7 +112,7 @@ textarea {
     }
     
     div#column2 {
-        margin-top: -1.33em;
+        margin-top: 0;
         float:left;
         width:50%;
     }
@@ -127,7 +127,7 @@ textarea {
         height: 200px;
     }
     
-    input#councillorStart, input#councillorEnd, input#clipLength {
+    input#councillorStart, input#councillorEnd, input#clipLength, input#wordsPerMinute {
         width: 70px;
     }
     

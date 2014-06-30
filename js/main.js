@@ -175,7 +175,6 @@ function twoDecimalRound(number) {
 
 function displayLastSavedDetails(jsonrow) {
     var lastSavedDetailsElement = document.getElementById('lastSavedDetails');
-    var h4 = document.createElement('h4');
     var strong = document.createElement('strong');
     var p  = document.createElement('p');
     var spoken = (jsonrow.hansard.spoken) ? jsonrow.hansard.spoken : jsonrow.hansard.motion_text;
@@ -188,11 +187,9 @@ function displayLastSavedDetails(jsonrow) {
                                            ' {' + jsonrow.start_time.toHHMMSS() + 
                                            ' - ' + jsonrow.end_time.toHHMMSS() + '}'); 
     lastSavedDetailsElement.innerHTML = '';
-    h4.innerHTML = 'Last Saved';
-    strong.innerHTML = jsonrow.councillor;
+    strong.innerHTML = 'Saved: ' + jsonrow.councillor;
     p.appendChild(strong);
     p.appendChild(timeText);
-    lastSavedDetailsElement.appendChild(h4);
     lastSavedDetailsElement.appendChild(p);
 }
 

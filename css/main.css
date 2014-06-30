@@ -152,6 +152,14 @@ textarea {
         font-size: 0.9em;
     }
 
+    #save, #persistToTextArea {
+        background-color: #bbdf71;
+    }
+
+    #deleteRow {
+        background-color: #da636b;
+    }
+
 
 
 /* ==========================================================================

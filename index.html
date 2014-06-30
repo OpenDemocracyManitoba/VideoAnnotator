@@ -44,7 +44,7 @@
                     <button id="previousHansardRow">Previous Speaker</button>
                     <button id="nextHansardRow">Next Speaker</button>
                     <label for="wordsPerMinute">Words Per Minute</label>
-                    <input id="wordsPerMinute" type="number" value="100">
+                    <input id="wordsPerMinute" type="number" value="160">
                 </div>
                 <div id="previousSpeaker"></div>
                 <div id="currentSpeaker"></div>
@@ -58,11 +58,13 @@
                     <button id="forward">+5s</button>
                     <button id="forwardMore">+10s</button>
                     <button id="forwardEvenMore">+30s</button>
+                    <button id="forwardEvenMoreMore">+1m</button>
                 </p>
                 <p>
                     <select id="councillors"></select>
-                    <button id="recordStart">Record Start Time</button>
-                    <button id="recordEnd">Record End Time</button><br />
+                    <button id="recordStart">Set Start Time</button>
+                    <button id="recordEnd">Set End Time</button>
+                    <button id="save">Save</button>
                 </p>
                 <p>
                     Speaking Type:
@@ -72,6 +74,7 @@
                         <option value="speaker">Speaking</option>
                         <option value="motion">Motion Reading</option>
                         <option value="vote">Vote</option>
+                        <option value="section">Section</option>
                     </select>
                 </p>
                 <p>         
@@ -81,9 +84,6 @@
                 </p>
                 <p>         
                     Notes: <textarea id="notes" rows="3" cols="40"></textarea>
-                </p>
-                <p>         
-                    <button id="save">Save Row</button>
                 </p>
                 <div id="lastSavedDetails"></div>
                 <h4>Save History</h4>

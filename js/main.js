@@ -57,6 +57,7 @@ d.getElementById("reverse").addEventListener("click", reverse, false);
 d.getElementById("forward").addEventListener("click", forward, false);
 d.getElementById("forwardMore").addEventListener("click", forwardMore, false);
 d.getElementById("forwardEvenMore").addEventListener("click", forwardEvenMore, false);
+d.getElementById("forwardEvenMoreMore").addEventListener("click", forwardEvenMoreMore, false);
 d.getElementById("nextHansardRow").addEventListener("click", selectNextHansardRow, false);
 d.getElementById("previousHansardRow").addEventListener("click", selectPreviousHansardRow, false);
 d.getElementById("persistedJSON").addEventListener("click", function() {
@@ -110,7 +111,7 @@ function setSpeakersText() {
                 spoken = currentSpeaker.motion_text;
             } else if (currentSpeaker.outcome) {
                 spoken = currentSpeaker.outcome + ' -- yeas: ' + currentSpeaker.yeas + ' -- nays: ' + currentSpeaker.nays;
-            }
+            } 
 
             var wordsSpoken = wordCount(spoken);
             if (wordsSpoken > 0) {
@@ -224,6 +225,7 @@ function selectedHansardCouncillorName() {
     switch(hansardRow.type) {
         case 'vote':
         case 'motion':
+        case 'section':
             councillorName = 'Clerk';
             break;
         default:
@@ -370,7 +372,8 @@ function saveRow(){
         
         // Warning if the handsard row type doesn't match the user selected speaking type.
         if ((selectedHansardJSON.type == 'speaker' && speakingType != 'Speaking')
-            || (selectedHansardJSON.type == 'motion' && speakingType != 'Motion Reading')) {
+            || (selectedHansardJSON.type == 'motion' && speakingType != 'Motion Reading')
+            || (selectedHansardJSON.type == 'section' && speakingType != 'Section')) {
             validationError = "Selected speaking type doesn't match selected hansard row.";
         }
         
@@ -380,7 +383,7 @@ function saveRow(){
         }
         
         // Warn if clip length is zero.
-        if (clipLength.value == 0) {
+        if ((clipLength.value == 0) && (selectedHansardJSON.type != 'section')) {
             validationError = "Are you sure you wish to save a record with a duration of zero? "
         }
 
@@ -449,6 +452,10 @@ function recordStart() {
     videoTitle.value = currentVidName;
     var roundedTime = Math.round(player.getCurrentTime()*10)/10 //to the tenth of a second
     councillorStart.value = roundedTime;
+    if (selectedHansardJSON().type == 'section') {
+        councillorEnd.value = roundedTime;
+        calculateClipLength();
+    }
     showCurrentTime();
 }
 
@@ -505,7 +512,7 @@ function loadHansard() {
     var h = hansard.hansard;
     for(var i=0; i<h.length; i++) {
         //types: speaker, motion, section, vote
-        if(h[i].type == "speaker" || h[i].type == "motion" || h[i].type == "vote") {
+        if(h[i].type == "speaker" || h[i].type == "motion" || h[i].type == "vote" || h[i].type == 'section') {
             var json_row = h[i];
             var option = d.createElement("option");
             // Stringify our data into JSON to store in the hansardSelect.
@@ -536,6 +543,9 @@ function forwardMore() {
 }
 function forwardEvenMore() {
     player.seekTo(player.getCurrentTime() + 30, true);
+}
+function forwardEvenMoreMore() {
+    player.seekTo(player.getCurrentTime() + 60, true);
 }
 function showCurrentTime() {
     currentTime.value = player.getCurrentTime();

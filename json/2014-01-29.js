@@ -57,8 +57,15 @@ hansard={
     },
     {
       "name": "Madam Speaker",
-      "spoken": "We have a condolence motion today for former Councillor Al Ducharme. Mr. Clerk, will you read the motion? Moved by Councillor Mayes, Seconded by Councillor Vandal, That Council place on record its profound sorrow at the death of former Councillor Al Ducharme, which occurred on December 19, 2013. This Council extends to his wife Joyce, children Sherrill, Lori and Randall, and their families, its deepest sympathy and condolences in their bereavement. ",
+      "spoken": "We have a condolence motion today for former Councillor Al Ducharme. Mr. Clerk, will you read the motion?",
       "type": "speaker"
+    },
+    {
+      "name": "Condolences",
+      "moved_by": "Councillor Mayes",
+      "seconded_by": "Councillor Vandal",
+      "motion_text": "That Council place on record its profound sorrow at the death of former Councillor Al Ducharme, which occurred on December 19, 2013. This Council extends to his wife Joyce, children Sherrill, Lori and Randall, and their families, its deepest sympathy and condolences in their bereavement.",
+      "type": "motion"
     },
     {
       "name": "Madam Speaker",

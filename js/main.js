@@ -101,9 +101,6 @@ function setSpeakersText() {
             element.innerHTML = '';
             var h4 = document.createElement('h4');
             h4.innerHTML = currentSpeaker.name;
-            if (currentSpeaker.moved_by) {
-                h4.innerHTML += " (" + currentSpeaker.moved_by + ")";
-            }
             var p = document.createElement('p');
 
             var spoken = '';
@@ -177,20 +174,33 @@ function displayLastSavedDetails(jsonrow) {
     var lastSavedDetailsElement = document.getElementById('lastSavedDetails');
     var strong = document.createElement('strong');
     var p  = document.createElement('p');
+    var p2 = document.createElement('p');
     var spoken = (jsonrow.hansard.spoken) ? jsonrow.hansard.spoken : jsonrow.hansard.motion_text;
     var wordsSpoken = wordCount(spoken);
     var lengthInMinutes = twoDecimalRound(jsonrow.length / 60);
     var wordsPerMinute = Math.round(wordsSpoken / lengthInMinutes);
+    var startLink = buildSeekLink(jsonrow.start_time);
+    var endLink = buildSeekLink(jsonrow.end_time);
     var timeText = document.createTextNode(' said ' + wordsSpoken + 
                                            ' words in ' + lengthInMinutes + 
-                                           ' minutes, at a rate of ' + wordsPerMinute + ' words per minute.' + 
-                                           ' {' + jsonrow.start_time.toHHMMSS() + 
-                                           ' - ' + jsonrow.end_time.toHHMMSS() + '}'); 
+                                           ' minutes, at a rate of ' + wordsPerMinute + ' words per minute.');
+                                           //' - ' + jsonrow.end_time.toHHMMSS() + '}'); 
     lastSavedDetailsElement.innerHTML = '';
     strong.innerHTML = 'Saved: ' + jsonrow.councillor;
     p.appendChild(strong);
     p.appendChild(timeText);
+    p2.appendChild(startLink);
+    p2.innerHTML += " - ";
+    p2.appendChild(endLink);
     lastSavedDetailsElement.appendChild(p);
+    lastSavedDetailsElement.appendChild(p2);
+}
+
+function buildSeekLink(seekTime) {
+    var link = document.createElement('a');
+    link.setAttribute('href','javascript:player.seekTo(' + seekTime + ');');
+    link.innerHTML = seekTime.toHHMMSS();
+    return link;
 }
 
 // Set the "Speaking Type" select drop-down from the selected Hansard data.
@@ -213,10 +223,8 @@ function selectedHansardCouncillorName() {
         hansardRow = selectedHansardJSON();
     switch(hansardRow.type) {
         case 'vote':
-            councillorName = 'Clerk';
-            break;
         case 'motion':
-            councillorName = hansardRow.moved_by;
+            councillorName = 'Clerk';
             break;
         default:
             councillorName = hansardRow.name;
@@ -375,6 +383,10 @@ function saveRow(){
         if (clipLength.value == 0) {
             validationError = "Are you sure you wish to save a record with a duration of zero? "
         }
+
+        if (!councillorStart.value || !councillorEnd.value) {
+            validationError = "You must set both a start and end time.";
+        }
         
         // Display validation warning if there is one. Quit function if user hits cancel on confirm modal. 
         if (validationError && !confirm(validationError + "\nOK to proceed. Cancel to fix.")) {
@@ -398,8 +410,8 @@ function saveRow(){
         var text = d.createTextNode(JSON.stringify(json_row));
         option.appendChild(text);
         saveHistory.appendChild(option);
-        selectNextHansardRow();
         resetFormTextfields();
+        selectNextHansardRow();
         displayLastSavedDetails(json_row);
     } else {
         alert("You need to select an entry from the Hansard text before you can save.")

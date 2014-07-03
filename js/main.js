@@ -51,13 +51,13 @@ d.getElementById("deleteRow").addEventListener("click", deleteRow, false);
 d.getElementById("persistToTextArea").addEventListener("click", persistToTextArea, false);
 d.getElementById("loadVideo").addEventListener("click", loadVideo, false);
 d.getElementById("loadHansard").addEventListener("click", loadHansard, false);
-d.getElementById("reverseEvenMore").addEventListener("click", reverseEvenMore, false);
-d.getElementById("reverseMore").addEventListener("click", reverseMore, false);
-d.getElementById("reverse").addEventListener("click", reverse, false);
-d.getElementById("forward").addEventListener("click", forward, false);
-d.getElementById("forwardMore").addEventListener("click", forwardMore, false);
-d.getElementById("forwardEvenMore").addEventListener("click", forwardEvenMore, false);
-d.getElementById("forwardEvenMoreMore").addEventListener("click", forwardEvenMoreMore, false);
+d.getElementById("reverseEvenMore").addEventListener("click", function() { videoTimeTravelBySeconds(-30) }, false);
+d.getElementById("reverseMore").addEventListener("click", function() { videoTimeTravelBySeconds(-10) }, false);
+d.getElementById("reverse").addEventListener("click", function() { videoTimeTravelBySeconds(-5) }, false);
+d.getElementById("forward").addEventListener("click", function() { videoTimeTravelBySeconds(+5) }, false);
+d.getElementById("forwardMore").addEventListener("click", function() { videoTimeTravelBySeconds(+10) }, false);
+d.getElementById("forwardEvenMore").addEventListener("click", function() { videoTimeTravelBySeconds(+30) }, false);
+d.getElementById("forwardEvenMoreMore").addEventListener("click", function() { videoTimeTravelBySeconds(+60) }, false);
 d.getElementById("nextHansardRow").addEventListener("click", selectNextHansardRow, false);
 d.getElementById("previousHansardRow").addEventListener("click", selectPreviousHansardRow, false);
 d.getElementById("persistedJSON").addEventListener("click", function() {
@@ -526,27 +526,10 @@ function loadHansard() {
 
 
 //*******************************Basic video functions ************************
-function reverseEvenMore() {
-    player.seekTo(player.getCurrentTime() - 30, true);
+function videoTimeTravelBySeconds(numberOfSecondsOffet) {
+    player.seekTo(player.getCurrentTime() + numberOfSecondsOffet, true);
 }
-function reverseMore() {
-    player.seekTo(player.getCurrentTime() - 10, true);
-}
-function reverse() {
-    player.seekTo(player.getCurrentTime() - 5, true);
-}
-function forward() {
-    player.seekTo(player.getCurrentTime() + 5, true);
-}
-function forwardMore() {
-    player.seekTo(player.getCurrentTime() + 10, true);
-}
-function forwardEvenMore() {
-    player.seekTo(player.getCurrentTime() + 30, true);
-}
-function forwardEvenMoreMore() {
-    player.seekTo(player.getCurrentTime() + 60, true);
-}
+
 function showCurrentTime() {
     currentTime.value = player.getCurrentTime();
 }
